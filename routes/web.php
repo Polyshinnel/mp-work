@@ -4,6 +4,7 @@ use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Ozon\OzonPageController;
+use App\Http\Controllers\Ozon\TestController;
 use App\Http\Controllers\Payment\GetPayments;
 use App\Http\Controllers\Payment\PaymentController;
 use App\Http\Controllers\Returning\GetReturning;
@@ -77,4 +78,8 @@ Route::middleware([LoggedUser::class])->group(function () {
 
     Route::post('/settings/ozon-settings/statuses/add', OzonStatusStoreController::class);
     Route::post('/settings/ozon-settings/warehouses/add', OzonWarehouseStoreController::class);
+});
+
+Route::middleware([LoggedUser::class])->group(function () {
+    Route::post('/ozon-list/test', TestController::class);
 });
