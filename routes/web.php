@@ -3,6 +3,7 @@
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\Ozon\OzonPageController;
 use App\Http\Controllers\Payment\GetPayments;
 use App\Http\Controllers\Payment\PaymentController;
 use App\Http\Controllers\Returning\GetReturning;
@@ -29,4 +30,14 @@ Route::post('/auth', AuthController::class);
 
 Route::middleware([LoggedUser::class])->group(function () {
     Route::get('/', HomeController::class);
+});
+
+Route::middleware([LoggedUser::class])->group(function () {
+    Route::get('/ozon', OzonPageController::class);
+    Route::get('/ozon/awaiting-delivery', OzonPageController::class);
+    Route::get('/ozon/delivery', OzonPageController::class);
+    Route::get('/ozon/arbitration', OzonPageController::class);
+    Route::get('/ozon/delivered', OzonPageController::class);
+    Route::get('/ozon/canceled', OzonPageController::class);
+    Route::get('/ozon/all', OzonPageController::class);
 });
