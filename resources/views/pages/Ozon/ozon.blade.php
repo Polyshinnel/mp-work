@@ -1,7 +1,7 @@
 @extends('layout.main-layout')
-@section('username', $username)
-@section('page_title', $page_title)
-@section('block_title', $block_title)
+@section('username', $pageInfo['username'])
+@section('page_title', $pageInfo['page_title'])
+@section('block_title', $pageInfo['block_title'])
 
 @section('content')
     <div class="col-12">
@@ -9,25 +9,25 @@
             <div class="card-header p-0 border-bottom-0">
                 <ul class="nav nav-tabs" id="custom-tabs-four-tab" role="tablist">
                     <li class="nav-item">
-                        <a href="/ozon" class="nav-link active" aria-controls="custom-tabs-four-profile" aria-selected="true">Ожидают сборки</a>
+                        <a href="/ozon-list" class="nav-link active" aria-controls="custom-tabs-four-profile" aria-selected="true">Ожидают сборки</a>
                     </li>
                     <li class="nav-item">
-                        <a href="/ozon/awaiting-delivery" class="nav-link" aria-controls="custom-tabs-four-profile" aria-selected="false">Ожидают отгрузки</a>
+                        <a href="/ozon-list/awaiting-delivery" class="nav-link" aria-controls="custom-tabs-four-profile" aria-selected="false">Ожидают отгрузки</a>
                     </li>
                     <li class="nav-item">
-                        <a href="/ozon/delivery" class="nav-link" aria-controls="custom-tabs-four-profile" aria-selected="false">Доставляются</a>
+                        <a href="/ozon-list/delivery" class="nav-link" aria-controls="custom-tabs-four-profile" aria-selected="false">Доставляются</a>
                     </li>
                     <li class="nav-item">
-                        <a href="/ozon/arbitration" class="nav-link" aria-controls="custom-tabs-four-profile" aria-selected="false">Спорные</a>
+                        <a href="/ozon-list/arbitration" class="nav-link" aria-controls="custom-tabs-four-profile" aria-selected="false">Спорные</a>
                     </li>
                     <li class="nav-item">
-                        <a href="/ozon/delivered" class="nav-link" aria-controls="custom-tabs-four-profile" aria-selected="false">Доставлены</a>
+                        <a href="/ozon-list/delivered" class="nav-link" aria-controls="custom-tabs-four-profile" aria-selected="false">Доставлены</a>
                     </li>
                     <li class="nav-item">
-                        <a href="/ozon/canceled" class="nav-link" aria-controls="custom-tabs-four-profile" aria-selected="false">Отменены</a>
+                        <a href="/ozon-list/canceled" class="nav-link" aria-controls="custom-tabs-four-profile" aria-selected="false">Отменены</a>
                     </li>
                     <li class="nav-item">
-                        <a href="/ozon/all" class="nav-link" aria-controls="custom-tabs-four-home" aria-selected="false">Все</a>
+                        <a href="/ozon-list/all" class="nav-link" aria-controls="custom-tabs-four-home" aria-selected="false">Все</a>
                     </li>
                 </ul>
             </div>

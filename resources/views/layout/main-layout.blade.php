@@ -31,7 +31,7 @@
                     </div>
                     <div class="col-sm-6">
                         <ol class="breadcrumb float-sm-right">
-                            @foreach($breadcrumbs as $breadcrumb)
+                            @foreach($pageInfo['breadcrumbs'] as $breadcrumb)
                                 @if($breadcrumb['active'])
                                     <li class="breadcrumb-item active"><a href="{{$breadcrumb['link']}}">{{$breadcrumb['name']}}</a></li>
                                 @else

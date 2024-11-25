@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Requests\Settings;
+namespace App\Http\Requests\Settings\Ozon;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreSettingsRequest extends FormRequest
+class OzonStatusSettings extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,10 +22,9 @@ class StoreSettingsRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'site_id' => 'integer',
-            'payment_id' => 'integer',
-            'shop_id' => 'string',
-            'api_key' => 'string'
+            'status_name' => 'string',
+            'status_color' => 'string',
+            'ozon_status_name' => 'string',
         ];
     }
 }

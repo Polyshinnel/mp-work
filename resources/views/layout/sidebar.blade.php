@@ -29,7 +29,7 @@
                 </li>
 
                 <li class="nav-item">
-                    <a href="/ozon" class="nav-link">
+                    <a href="/ozon-list" class="nav-link">
                         <i class="nav-icon fas fa-credit-card"></i>
                         <p>
                             Озон

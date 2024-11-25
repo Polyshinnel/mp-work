@@ -1,14 +1,13 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Settings\CommonSettings;
 
-use App\Http\Controllers\Utils\TimeController;
-use App\Models\Payment;
-use App\Models\Returning;
+use App\Http\Controllers\BasePageController;
+use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
 
-class HomeController extends BasePageController
+class CommonSettingsPage extends BasePageController
 {
     public function __invoke(Request $request)
     {
@@ -16,7 +15,7 @@ class HomeController extends BasePageController
 
 
         return view(
-            'home',
+            'pages.Settings.Common.settings-common',
             [
                 'pageInfo' => $pageInfo,
                 'link' => '/',

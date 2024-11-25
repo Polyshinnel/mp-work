@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('name');
             $table->string('ozon_status_name');
             $table->string('color')->nullable();
+            $table->boolean('watch')->default(false);
             $table->timestamps();
         });
     }
