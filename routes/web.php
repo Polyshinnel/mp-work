@@ -11,13 +11,17 @@ use App\Http\Controllers\Returning\ReturningController;
 use App\Http\Controllers\Settings\CommonSettings\CommonSettingsPage;
 use App\Http\Controllers\Settings\CommonSettings\LabelAddPageController;
 use App\Http\Controllers\Settings\CommonSettings\LabelsPageController;
+use App\Http\Controllers\Settings\CommonSettings\LabelsStoreController;
 use App\Http\Controllers\Settings\CommonSettings\SiteStatusPageController;
+use App\Http\Controllers\Settings\CommonSettings\SiteStatusStoreController;
 use App\Http\Controllers\Settings\CommonSettings\StatusAddPageController;
 use App\Http\Controllers\Settings\CreateSettingsController;
 use App\Http\Controllers\Settings\OzonSettings\OzonCommonSettingsPage;
 use App\Http\Controllers\Settings\OzonSettings\OzonStatusAddPageController;
 use App\Http\Controllers\Settings\OzonSettings\OzonStatusPageController;
+use App\Http\Controllers\Settings\OzonSettings\OzonStatusStoreController;
 use App\Http\Controllers\Settings\OzonSettings\OzonWarehousePageController;
+use App\Http\Controllers\Settings\OzonSettings\OzonWarehouseStoreController;
 use App\Http\Controllers\Settings\OzonSettings\WarehouseAddPageController;
 use App\Http\Controllers\Settings\SettingsPageController;
 use App\Http\Controllers\Settings\StoreSettingsController;
@@ -61,10 +65,16 @@ Route::middleware([LoggedUser::class])->group(function () {
     Route::get('/settings/common/marks', LabelsPageController::class);
     Route::get('/settings/common/marks/add', LabelAddPageController::class);
 
+    Route::post('/settings/common/marks/add', LabelsStoreController::class);
+    Route::post('/settings/common/site-status/add', SiteStatusStoreController::class);
+
 
     Route::get('/settings/ozon-settings', OzonCommonSettingsPage::class);
     Route::get('/settings/ozon-settings/statuses', OzonStatusPageController::class);
     Route::get('/settings/ozon-settings/statuses/add', OzonStatusAddPageController::class);
     Route::get('/settings/ozon-settings/warehouses', OzonWarehousePageController::class);
     Route::get('/settings/ozon-settings/warehouses/add', WarehouseAddPageController::class);
+
+    Route::post('/settings/ozon-settings/statuses/add', OzonStatusStoreController::class);
+    Route::post('/settings/ozon-settings/warehouses/add', OzonWarehouseStoreController::class);
 });

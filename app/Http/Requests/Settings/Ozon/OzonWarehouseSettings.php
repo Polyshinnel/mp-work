@@ -23,7 +23,8 @@ class OzonWarehouseSettings extends FormRequest
     {
         return [
             'warehouse_name' => 'string',
-            'warehouse_id'=>'integer'
+            'warehouse_id'=>'string',
+            'type' => 'string'
         ];
     }
 }

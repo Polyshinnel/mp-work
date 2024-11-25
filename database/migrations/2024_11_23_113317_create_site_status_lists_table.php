@@ -18,6 +18,47 @@ return new class extends Migration
             $table->string('color')->nullable();
             $table->timestamps();
         });
+
+        $data_items = [
+            [
+                'name' => 'Новый',
+                'site_status_id' => 0,
+                'color' => '#4671D5'
+            ],
+            [
+                'name' => 'Резерв',
+                'site_status_id' => 4,
+                'color' => '#009999'
+            ],
+            [
+                'name' => 'Принят',
+                'site_status_id' => 1,
+                'color' => '#1D7373'
+            ],
+            [
+                'name' => 'КС',
+                'site_status_id' => 9,
+                'color' => '#33CCCC'
+            ],
+            [
+                'name' => 'Доставлен',
+                'site_status_id' => 2,
+                'color' => '#5CCCCC'
+            ],
+            [
+                'name' => 'Ожидает возврата',
+                'site_status_id' => 96,
+                'color' => '#6C8CD5'
+            ],
+            [
+                'name' => 'Возвращен',
+                'site_status_id' => 97,
+                'color' => '#FFAA00'
+            ],
+        ];
+        foreach ($data_items as $item) {
+            DB::table('site_status_lists')->insert($item);
+        }
     }
 
     /**

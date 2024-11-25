@@ -8,31 +8,23 @@
         <div class="col-12">
             <div class="card card-primary">
                 <div class="card-header">
-                    <h3 class="card-title">Настройки платежной системы</h3>
+                    <h3 class="card-title">Параметры статуса сайта</h3>
                 </div>
                 <!-- /.card-header -->
                 <!-- form start -->
-                <form method="POST" action="/settings/create">
+                <form method="POST" action="/settings/common/site-status/add">
                     <div class="card-body">
                         <div class="form-group">
-                            <label for="site-addr">Адрес сайта</label>
-                            <select class="form-control" id="site-addr" name="site_id">
-
-                            </select>
+                            <label for="status_name">Название статуса</label>
+                            <input type="text" class="form-control" id="status_name" name="status_name" placeholder="Резерв">
                         </div>
                         <div class="form-group">
-                            <label for="payment_id">Платежная система</label>
-                            <select class="form-control" id="payment_id" name="payment_id">
-
-                            </select>
+                            <label for="status_id">Ид статуса на сайте(искать в коде симплы)</label>
+                            <input type="text" class="form-control" id="status_id" name="status_id" placeholder="4">
                         </div>
                         <div class="form-group">
-                            <label for="shop_id">Shop Id</label>
-                            <input type="text" class="form-control" id="shop_id" name="shop_id" placeholder="Shop Id">
-                        </div>
-                        <div class="form-group">
-                            <label for="api_key">Api Key</label>
-                            <input type="text" class="form-control" id="api_key" name="api_key" placeholder="Api Key">
+                            <label for="color">Цвет(hex)</label>
+                            <input type="text" class="form-control" id="color" name="color" placeholder="#ff0000">
                         </div>
                     </div>
                     <!-- /.card-body -->

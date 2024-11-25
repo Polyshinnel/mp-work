@@ -15,8 +15,35 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('type');
-            $table->integer('warehouse_id');
+            $table->string('warehouse_id');
+            $table->timestamps();
         });
+
+        $data_items = [
+            [
+                'name' => 'Ярославская',
+                'type' => 'FBS',
+                'warehouse_id' => '19294037531000',
+            ],
+            [
+                'name' => 'Ярославская ФД',
+                'type' => 'FBS',
+                'warehouse_id' => '21076380483000',
+            ],
+            [
+                'name' => 'Ярославская экспресс',
+                'type' => 'Экспресс',
+                'warehouse_id' => '23392814134000',
+            ],
+            [
+                'name' => 'Ярославская Коник',
+                'type' => 'FBS',
+                'warehouse_id' => '1020000877283000',
+            ],
+        ];
+        foreach ($data_items as $item) {
+            DB::table('ozon_warehouses')->insert($item);
+        }
     }
 
     /**

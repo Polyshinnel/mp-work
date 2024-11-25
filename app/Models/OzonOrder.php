@@ -8,4 +8,6 @@ use Illuminate\Database\Eloquent\Model;
 class OzonOrder extends Model
 {
     use HasFactory;
+
+    protected $guarded = false;
 }

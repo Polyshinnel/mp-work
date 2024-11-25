@@ -12,23 +12,19 @@
                 </div>
                 <!-- /.card-header -->
                 <!-- form start -->
-                <form method="POST" action="/settings/create">
+                <form method="POST" action="/settings/ozon-settings/warehouses/add">
                     <div class="card-body">
                         <div class="form-group">
-                            <label for="site-addr">Адрес сайта</label>
-
+                            <label for="warehouse_name">Название склада</label>
+                            <input type="text" class="form-control" id="warehouse_name" name="warehouse_name" placeholder="Ярославская">
                         </div>
                         <div class="form-group">
-                            <label for="payment_id">Платежная система</label>
-
+                            <label for="warehouse_id">Id склада(брать из Апи)</label>
+                            <input type="text" class="form-control" id="warehouse_id" name="warehouse_id" placeholder="19294037531000">
                         </div>
                         <div class="form-group">
-                            <label for="shop_id">Shop Id</label>
-                            <input type="text" class="form-control" id="shop_id" name="shop_id" placeholder="Shop Id">
-                        </div>
-                        <div class="form-group">
-                            <label for="api_key">Api Key</label>
-                            <input type="text" class="form-control" id="api_key" name="api_key" placeholder="Api Key">
+                            <label for="type">Тип склада</label>
+                            <input type="text" class="form-control" id="type" name="type" placeholder="Экспресс">
                         </div>
                     </div>
                     <!-- /.card-body -->

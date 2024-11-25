@@ -28,12 +28,22 @@ class CommonSettingsRepository
         SiteLabel::where('id', $labelId)->delete();
     }
 
+    public function getLabelById(int $labelId): ?SiteLabel
+    {
+        return SiteLabel::find($labelId);
+    }
+
+    public function getSiteLabelByLabelId(int $siteLabelId): ?SiteLabel
+    {
+        return SiteLabel::where('site_label_id', $siteLabelId)->first();
+    }
+
     public function createSiteStatus(array $createArr): void
     {
         SiteStatusList::create($createArr);
     }
 
-    public function getSiteStatus(): Collection
+    public function getSiteStatusList(): Collection
     {
         return SiteStatusList::all();
     }
@@ -46,5 +56,15 @@ class CommonSettingsRepository
     public function deleteSiteStatus(int $statusId): void
     {
         SiteStatusList::where('id', $statusId)->delete();
+    }
+
+    public function getSiteStatusById(int $statusId): ?SiteStatusList
+    {
+        return SiteStatusList::find($statusId);
+    }
+
+    public function getSiteStatusBySiteStatusId(int $siteStatusId): ?SiteStatusList
+    {
+        return SiteStatusList::where('site_status_id', $siteStatusId)->first();
     }
 }

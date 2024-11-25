@@ -25,6 +25,8 @@ class OzonStatusSettings extends FormRequest
             'status_name' => 'string',
             'status_color' => 'string',
             'ozon_status_name' => 'string',
+            'watch_label' => 'boolean',
+            'watch_ozon_status' => 'boolean',
         ];
     }
 }

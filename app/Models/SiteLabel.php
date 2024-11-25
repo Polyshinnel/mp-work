@@ -8,4 +8,6 @@ use Illuminate\Database\Eloquent\Model;
 class SiteLabel extends Model
 {
     use HasFactory;
+
+    protected $guarded = false;
 }

@@ -38,7 +38,16 @@
                         </tr>
                         </thead>
                         <tbody>
-
+                            @if($warehouseList)
+                                @foreach($warehouseList as $warehouse)
+                                    <tr>
+                                        <td>{{$warehouse['id']}}</td>
+                                        <td>{{$warehouse['warehouse_id']}}</td>
+                                        <td>{{$warehouse['name']}}</td>
+                                        <td>{{$warehouse['type']}}</td>
+                                    </tr>
+                                @endforeach
+                            @endif
                         </tbody>
                     </table>
                 </div>

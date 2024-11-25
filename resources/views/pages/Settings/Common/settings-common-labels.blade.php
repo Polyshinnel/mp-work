@@ -38,7 +38,16 @@
                         </tr>
                         </thead>
                         <tbody>
-
+                            @if($labels)
+                                @foreach($labels as $label)
+                                    <tr>
+                                        <td>{{$label['id']}}</td>
+                                        <td>{{$label['site_label_id']}}</td>
+                                        <td>{{$label['name']}}</td>
+                                        <td><div class="color-block" style="width: 25px; height: 25px; background: {{$label['color']}}"></div></td>
+                                    </tr>
+                                @endforeach
+                            @endif
                         </tbody>
                     </table>
                 </div>

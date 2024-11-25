@@ -18,6 +18,27 @@ return new class extends Migration
             $table->string('color')->nullable();
             $table->timestamps();
         });
+
+        $data_items = [
+            [
+                'name' => 'Cклад - сборка',
+                'site_label_id' => 24,
+                'color' => '#e0b0ff',
+            ],
+            [
+                'name' => 'Склад - готово',
+                'site_label_id' => 16,
+                'color' => '#AE93BF',
+            ],
+            [
+                'name' => 'Склад - упаковка',
+                'site_label_id' => 105,
+                'color' => '#E8C4FF',
+            ],
+        ];
+        foreach ($data_items as $item) {
+            DB::table('site_labels')->insert($item);
+        }
     }
 
     /**

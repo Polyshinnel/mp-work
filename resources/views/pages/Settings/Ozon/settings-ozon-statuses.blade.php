@@ -35,10 +35,35 @@
                             <th>Ozon Статус</th>
                             <th>Название</th>
                             <th>Цвет</th>
+                            <th>Проверять метки</th>
+                            <th>Обновлять статус</th>
                         </tr>
                         </thead>
                         <tbody>
-
+                            @if($statusList)
+                                @foreach($statusList as $status)
+                                    <tr>
+                                        <td>{{$status['id']}}</td>
+                                        <td>{{$status['ozon_status_name']}}</td>
+                                        <td>{{$status['name']}}</td>
+                                        <td><div class="color-block" style="width: 25px; height: 25px; background: {{$status['color']}}"></div></td>
+                                        <td>
+                                            @if($status['watch_label'])
+                                                Да
+                                            @else
+                                                Нет
+                                            @endif
+                                        </td>
+                                        <td>
+                                            @if($status['watch_ozon_status'])
+                                                Да
+                                            @else
+                                                Нет
+                                            @endif
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            @endif
                         </tbody>
                     </table>
                 </div>
