@@ -63,4 +63,27 @@ class OzonSettingsService
             ];
         }
     }
+
+    public function getOzonSettingsAssociativeData()
+    {
+        $ozonSettings = [];
+        $warehouses = $this->ozonSettingsRepository->getOzonWarehouseList();
+        $ozonStatusList = $this->ozonSettingsRepository->getOzonStatusList();
+        if(!$warehouses->isEmpty() && !$ozonStatusList->isEmpty())
+        {
+            foreach ($warehouses as $warehouse)
+            {
+                $ozonSettings['warehouses'][$warehouse->warehouse_id] = $warehouse->id;
+            }
+
+            foreach ($ozonStatusList as $status)
+            {
+                $ozonSettings['ozon_status'][$status->ozon_status_name] = $status->id;
+            }
+
+            return $ozonSettings;
+        }
+
+        return [];
+    }
 }

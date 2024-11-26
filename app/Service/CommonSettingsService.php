@@ -114,4 +114,35 @@ class CommonSettingsService
         }
         return $statusList;
     }
+
+    public function getCommonSettingsAssociativeData()
+    {
+        $sites = $this->commonSettingsRepository->getSitesSettings();
+        $siteLabels = $this->commonSettingsRepository->getSiteLabels();
+        $siteStatusList = $this->commonSettingsRepository->getSiteStatusList();
+
+        $commonResult = [];
+
+        if(!$sites->isEmpty() && !$siteLabels->isEmpty() && !$siteStatusList->isEmpty())
+        {
+            foreach ($sites as $site)
+            {
+                $commonResult['sites'][$site->db_name] = $site->id;
+            }
+
+            foreach ($siteLabels as $label)
+            {
+                $commonResult['labels'][$label->site_label_id] = $label->id;
+            }
+
+            foreach ($siteStatusList as $status)
+            {
+                $commonResult['site_status'][$status->site_status_id] = $status->id;
+            }
+
+            return $commonResult;
+        }
+
+        return [];
+    }
 }

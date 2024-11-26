@@ -36,30 +36,49 @@
                     <div class="card-body table-responsive p-0">
                         <table class="table table-hover text-nowrap">
                             <thead>
-                            <tr>
+                            <tr style="text-align: center">
                                 <th></th>
                                 <th>ID</th>
                                 <th>Дата</th>
-                                <th>Сайт</th>
                                 <th>Номер заказа</th>
                                 <th>Номер заказа Озон</th>
                                 <th>Статус на сайте</th>
                                 <th>Метка склада</th>
-                                <th></th>
+                                <th>Склад Озон</th>
+                                <th>Наклейка</th>
                             </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td><input type="checkbox" name="" id=""></td>
-                                    <td>1</td>
-                                    <td>25.11.2024 21:27:19</td>
-                                    <td>https://djecoshop.ru/</td>
-                                    <td>34592</td>
-                                    <td>0124861566-0018-4</td>
-                                    <td>Принят</td>
-                                    <td>Cклад - сборка</td>
-                                    <td><button>Скачать наклейку</button></td>
-                                </tr>
+                                @if($order_info)
+                                    @foreach($order_info as $order)
+                                        <tr style="text-align: center">
+                                            <td><input type="checkbox" name="" id=""></td>
+                                            <td>{{$order['id']}}</td>
+                                            <td>{{$order['date']['formatted_date']}}</td>
+                                            <td><a href="{{$order['site_link']}}">{{$order['site_order']}}</a></td>
+                                            <td><a href="{{$order['ozon_link']}}">{{$order['ozon_posting_id']}}</a></td>
+                                            <td>
+                                                <div style="border-radius: 20px; padding: 5px; background: {{$order['site_status_color']}}; text-align: center;">
+                                                    {{$order['site_status_name']}}
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div style="border-radius: 20px; padding: 5px; background: {{$order['site_label_color']}}; text-align: center;">
+                                                    {{$order['site_label_name']}}
+                                                </div>
+                                            </td>
+                                            <td>{{$order['warehouse_name']}}</td>
+                                            <td>
+                                                @if($order['has_btn'])
+                                                    <button type="button" class="btn btn-block btn-primary">Скачать</button>
+                                                @else
+                                                    <button type="button" class="btn btn-block btn-primary disabled">Скачать</button>
+                                                @endif
+
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                @endif
                             </tbody>
                         </table>
                     </div>

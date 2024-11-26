@@ -17,11 +17,12 @@ return new class extends Migration
             $table->unsignedBigInteger('site_label_id');
             $table->unsignedBigInteger('ozon_status_id');
             $table->unsignedBigInteger('ozon_warehouse_id');
+            $table->unsignedBigInteger('site_id');
             $table->string('ozon_order_id');
             $table->string('ozon_posting_id');
             $table->integer('products_count');
             $table->string('site_order_id');
-            $table->unsignedBigInteger('site_id');
+            $table->dateTime('date_order_create');
             $table->timestamps();
 
             $table->index('site_status_id', 'ozon_orders_site_status_id_idx');

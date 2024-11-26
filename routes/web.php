@@ -92,5 +92,5 @@ Route::middleware([LoggedUser::class])->group(function () {
 
 Route::middleware([LoggedUser::class])->group(function () {
     Route::post('/ozon-list/test', TestController::class);
-    Route::get('/ozon-list/test-api', [OzonOrderController::class, 'processingOzonOrders']);
+    Route::get('/ozon-list/test-api', [OzonOrderController::class, 'getSimplaOrderProcessing']);
 });
