@@ -2,6 +2,7 @@
 
 namespace App\Repostory\CommonSettings;
 
+use App\Models\Site;
 use App\Models\SiteLabel;
 use App\Models\SiteStatusList;
 use Illuminate\Database\Eloquent\Collection;
@@ -66,5 +67,35 @@ class CommonSettingsRepository
     public function getSiteStatusBySiteStatusId(int $siteStatusId): ?SiteStatusList
     {
         return SiteStatusList::where('site_status_id', $siteStatusId)->first();
+    }
+
+    public function createSiteSetting(array $createArr): void
+    {
+        Site::create($createArr);
+    }
+
+    public function updateSiteSetting(array $updateArr, int $settingId): void
+    {
+        Site::where('id', $settingId)->update($updateArr);
+    }
+
+    public function deleteSiteSetting(int $settingId): void
+    {
+        Site::where('id', $settingId)->delete();
+    }
+
+    public function getSiteSettingById(int $settingId): ?Site
+    {
+        return Site::find($settingId);
+    }
+
+    public function getSitesSettings(): Collection
+    {
+        return Site::all();
+    }
+
+    public function getSiteSettingByDbName(string $dbName): ?Site
+    {
+        return Site::where('db_name', $dbName)->first();
     }
 }

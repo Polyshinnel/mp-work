@@ -13,8 +13,11 @@ use App\Http\Controllers\Settings\CommonSettings\CommonSettingsPage;
 use App\Http\Controllers\Settings\CommonSettings\LabelAddPageController;
 use App\Http\Controllers\Settings\CommonSettings\LabelsPageController;
 use App\Http\Controllers\Settings\CommonSettings\LabelsStoreController;
+use App\Http\Controllers\Settings\CommonSettings\SiteSettingPageAddController;
+use App\Http\Controllers\Settings\CommonSettings\SiteSettingPageController;
 use App\Http\Controllers\Settings\CommonSettings\SiteStatusPageController;
 use App\Http\Controllers\Settings\CommonSettings\SiteStatusStoreController;
+use App\Http\Controllers\Settings\CommonSettings\SiteStoreController;
 use App\Http\Controllers\Settings\CommonSettings\StatusAddPageController;
 use App\Http\Controllers\Settings\CreateSettingsController;
 use App\Http\Controllers\Settings\OzonSettings\OzonCommonSettingsPage;
@@ -61,13 +64,19 @@ Route::middleware([LoggedUser::class])->group(function () {
 Route::middleware([LoggedUser::class])->group(function () {
     Route::get('/settings', SettingsPageController::class);
     Route::get('/settings/common', CommonSettingsPage::class);
+
     Route::get('/settings/common/site-status', SiteStatusPageController::class);
     Route::get('/settings/common/site-status/add', StatusAddPageController::class);
+
     Route::get('/settings/common/marks', LabelsPageController::class);
     Route::get('/settings/common/marks/add', LabelAddPageController::class);
 
+    Route::get('/settings/common/sites', SiteSettingPageController::class);
+    Route::get('/settings/common/sites/add', SiteSettingPageAddController::class);
+
     Route::post('/settings/common/marks/add', LabelsStoreController::class);
     Route::post('/settings/common/site-status/add', SiteStatusStoreController::class);
+    Route::post('/settings/common/sites/add', SiteStoreController::class);
 
 
     Route::get('/settings/ozon-settings', OzonCommonSettingsPage::class);

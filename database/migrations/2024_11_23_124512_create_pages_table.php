@@ -135,6 +135,18 @@ return new class extends Migration
                 'block_title' => 'Добавление статуса',
                 'parent_id' => 18
             ],
+            [
+                'url' => 'settings/common/sites',
+                'title' => 'Список сайтов',
+                'block_title' => 'Список сайтов витрины',
+                'parent_id' => 10
+            ],
+            [
+                'url' => 'settings/common/sites/add',
+                'title' => 'Добавить сайт',
+                'block_title' => 'Добавление сайта',
+                'parent_id' => 20
+            ],
         ];
         foreach ($data_items as $item) {
             DB::table('pages')->insert($item);

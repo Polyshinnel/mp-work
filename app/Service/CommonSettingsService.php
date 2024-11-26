@@ -4,6 +4,7 @@ namespace App\Service;
 
 use App\Http\Requests\Settings\Common\LabelSettings;
 use App\Http\Requests\Settings\Common\OrderStatusSettings;
+use App\Http\Requests\Settings\Common\SiteSettingsRequest;
 use App\Repostory\CommonSettings\CommonSettingsRepository;
 use App\Repostory\OzonSettings\OzonSettingsRepository;
 use Illuminate\Support\Facades\DB;
@@ -55,6 +56,29 @@ class CommonSettingsService
         try {
             DB::beginTransaction();
             $this->commonSettingsRepository->createSiteStatus($createArr);
+            DB::commit();
+            return [
+                'err' => 'none'
+            ];
+        } catch (\Exception $exception){
+            DB::rollBack();
+            return [
+                'err' => $exception->getMessage()
+            ];
+        }
+    }
+
+    public function createSiteSettings(SiteSettingsRequest $request)
+    {
+        $data = $request->validated();
+        $createArr = [
+            'db_name' => $data['site_db'],
+            'prefix' => $data['site_prefix'],
+            'host' => $data['site_name']
+        ];
+        try {
+            DB::beginTransaction();
+            $this->commonSettingsRepository->createSiteSetting($createArr);
             DB::commit();
             return [
                 'err' => 'none'
