@@ -38,6 +38,11 @@ class OzonSettingsRepository
         return OzonStatusList::where('ozon_status_name', $statusName)->first();
     }
 
+    public function getOzonStatusByLabelWatch(): ?Collection
+    {
+        return OzonStatusList::where('watch_label', true)->get();
+    }
+
     public function createOzonWarehouse(array $createArr): void
     {
         OzonWarehouse::create($createArr);

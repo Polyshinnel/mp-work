@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use Exception;
 use Illuminate\Http\Request;
 
-class OrderController extends Controller
+class SimplaOrderController extends Controller
 {
     public function getOrder(string $externalId): array
     {

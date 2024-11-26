@@ -90,4 +90,28 @@ class CommonSettingsService
             ];
         }
     }
+
+    public function getAllOzonWarehousesIds(): array
+    {
+        $warehousesIds = [];
+        $warehouses = $this->ozonSettingsRepository->getOzonWarehouseList();
+        if(!$warehouses->isEmpty()){
+            foreach ($warehouses as $warehouse){
+                $warehousesIds[] = $warehouse->warehouse_id;
+            }
+        }
+        return $warehousesIds;
+    }
+
+    public function getOzonStatusWatchList(): array
+    {
+        $result = $this->ozonSettingsRepository->getOzonStatusByLabelWatch();
+        $statusList = [];
+        if(!$result->isEmpty()){
+            foreach ($result as $item){
+                $statusList[] = $item->ozon_status_name;
+            }
+        }
+        return $statusList;
+    }
 }

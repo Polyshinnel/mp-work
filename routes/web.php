@@ -3,6 +3,7 @@
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\Ozon\OzonOrderController;
 use App\Http\Controllers\Ozon\OzonPageController;
 use App\Http\Controllers\Ozon\TestController;
 use App\Http\Controllers\Payment\GetPayments;
@@ -91,4 +92,5 @@ Route::middleware([LoggedUser::class])->group(function () {
 
 Route::middleware([LoggedUser::class])->group(function () {
     Route::post('/ozon-list/test', TestController::class);
+    Route::get('/ozon-list/test-api', [OzonOrderController::class, 'processingOzonOrders']);
 });

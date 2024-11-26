@@ -17,11 +17,11 @@ return new class extends Migration
             $table->unsignedBigInteger('site_label_id');
             $table->unsignedBigInteger('ozon_status_id');
             $table->unsignedBigInteger('ozon_warehouse_id');
-            $table->integer('ozon_order_id');
-            $table->string('ozon_order_number');
-            $table->string('ozon_posting_number');
+            $table->string('ozon_order_id');
+            $table->string('ozon_posting_id');
             $table->integer('products_count');
-            $table->integer('site_order_id');
+            $table->string('site_order_id');
+            $table->unsignedBigInteger('site_id');
             $table->timestamps();
 
             $table->index('site_status_id', 'ozon_orders_site_status_id_idx');
@@ -42,6 +42,11 @@ return new class extends Migration
             $table->index('ozon_warehouse_id', 'ozon_orders_ozon_warehouse_id_idx');
             $table->foreign('ozon_warehouse_id', 'ozon_orders_ozon_warehouse_id_fk')
                 ->on('ozon_warehouses')
+                ->references('id');
+
+            $table->index('site_id', 'ozon_orders_site_id_idx');
+            $table->foreign('site_id', 'ozon_orders_ozon_site_id_fk')
+                ->on('sites')
                 ->references('id');
         });
     }
