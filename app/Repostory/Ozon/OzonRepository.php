@@ -22,6 +22,11 @@ class OzonRepository
         return OzonOrder::where($filter)->first();
     }
 
+    public function getOzonOrderById(int $id): ?OzonOrder
+    {
+        return OzonOrder::find($id);
+    }
+
     public function getOzonOrderListByStatus(int $statusId): ?Collection
     {
         return OzonOrder::where('ozon_status_id', $statusId)->get();

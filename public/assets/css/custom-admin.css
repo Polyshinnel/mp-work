@@ -6,3 +6,9 @@
 .mt-30{
     margin-top: 30px;
 }
+
+#order-table_filter{
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+}

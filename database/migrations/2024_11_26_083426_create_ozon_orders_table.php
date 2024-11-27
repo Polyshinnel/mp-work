@@ -31,7 +31,7 @@ return new class extends Migration
                 ->references('id');
 
             $table->index('site_label_id', 'ozon_orders_site_label_id_idx');
-            $table->foreign('site_status_id', 'ozon_orders_site_label_id_fk')
+            $table->foreign('site_label_id', 'ozon_orders_site_label_id_fk')
                 ->on('site_labels')
                 ->references('id');
 

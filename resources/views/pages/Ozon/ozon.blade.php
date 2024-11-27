@@ -8,36 +8,26 @@
         <div class="card card-primary card-outline card-outline-tabs">
             <div class="card-header p-0 border-bottom-0">
                 <ul class="nav nav-tabs" id="custom-tabs-four-tab" role="tablist">
-                    <li class="nav-item">
-                        <a href="/ozon-list" class="nav-link active" aria-controls="custom-tabs-four-profile" aria-selected="true">Ожидают сборки</a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="/ozon-list/awaiting-delivery" class="nav-link" aria-controls="custom-tabs-four-profile" aria-selected="false">Ожидают отгрузки</a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="/ozon-list/delivery" class="nav-link" aria-controls="custom-tabs-four-profile" aria-selected="false">Доставляются</a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="/ozon-list/arbitration" class="nav-link" aria-controls="custom-tabs-four-profile" aria-selected="false">Спорные</a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="/ozon-list/delivered" class="nav-link" aria-controls="custom-tabs-four-profile" aria-selected="false">Доставлены</a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="/ozon-list/canceled" class="nav-link" aria-controls="custom-tabs-four-profile" aria-selected="false">Отменены</a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="/ozon-list/all" class="nav-link" aria-controls="custom-tabs-four-home" aria-selected="false">Все</a>
-                    </li>
+                    @foreach($tabList as $tab)
+                        @if($tab['active'])
+                            <li class="nav-item">
+                                <a href="{{$tab['url']}}" class="nav-link active" aria-controls="custom-tabs-four-profile" aria-selected="true">{{$tab['name']}}</a>
+                            </li>
+                        @else
+                            <li class="nav-item">
+                                <a href="{{$tab['url']}}" class="nav-link" aria-controls="custom-tabs-four-profile" aria-selected="false">{{$tab['name']}}</a>
+                            </li>
+                        @endif
+                    @endforeach
                 </ul>
             </div>
             <div class="card-body">
                 <div class="tab-content">
                     <div class="card-body table-responsive p-0">
-                        <table class="table table-hover text-nowrap">
+                        <table id="order-table" class="table table-bordered table-striped">
                             <thead>
                             <tr style="text-align: center">
-                                <th></th>
+                                <th><input type="checkbox" name="all" id="all-checkbox"></th>
                                 <th>ID</th>
                                 <th>Дата</th>
                                 <th>Номер заказа</th>
@@ -52,7 +42,7 @@
                                 @if($order_info)
                                     @foreach($order_info as $order)
                                         <tr style="text-align: center">
-                                            <td><input type="checkbox" name="" id=""></td>
+                                            <td><input type="checkbox" name="" id="" class="order-checkbox" data-item="{{$order['id']}}"></td>
                                             <td>{{$order['id']}}</td>
                                             <td>{{$order['date']['formatted_date']}}</td>
                                             <td><a href="{{$order['site_link']}}">{{$order['site_order']}}</a></td>
@@ -70,7 +60,7 @@
                                             <td>{{$order['warehouse_name']}}</td>
                                             <td>
                                                 @if($order['has_btn'])
-                                                    <button type="button" class="btn btn-block btn-primary">Скачать</button>
+                                                    <a href="/ozon/getLabels?orders[]={{$order['id']}}"><button type="button" class="btn btn-block btn-primary">Скачать</button></a>
                                                 @else
                                                     <button type="button" class="btn btn-block btn-primary disabled">Скачать</button>
                                                 @endif
@@ -87,4 +77,33 @@
             <!-- /.card -->
         </div>
     </div>
+
+    <script src="/assets/plugins/datatables/jquery.dataTables.min.js"></script>
+    <script src="/assets/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
+    <script src="/assets/plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
+    <script src="/assets/plugins/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
+    <script src="/assets/plugins/datatables-buttons/js/dataTables.buttons.min.js"></script>
+    <script src="/assets/plugins/datatables-buttons/js/buttons.bootstrap4.min.js"></script>
+    <script src="/assets/plugins/jszip/jszip.min.js"></script>
+    <script src="/assets/plugins/pdfmake/pdfmake.min.js"></script>
+    <script src="/assets/plugins/pdfmake/vfs_fonts.js"></script>
+    <script src="/assets/plugins/datatables-buttons/js/buttons.html5.min.js"></script>
+    <script src="/assets/plugins/datatables-buttons/js/buttons.print.min.js"></script>
+    <script src="/assets/plugins/datatables-buttons/js/buttons.colVis.min.js"></script>
+
+    <script>
+        let table = $('#order-table').DataTable({
+            order: [[0, 'desc']],
+            pageLength: 20,
+            lengthChange: false,
+            oLanguage: {
+                oPaginate: {
+                    sFirst: "Первая", // This is the link to the first page
+                    sPrevious: "Пред.", // This is the link to the previous page
+                    sNext: "След.", // This is the link to the next page
+                    sLast: "Последняя" // This is the link to the last page
+                }
+            }
+        });
+    </script>
 @endsection

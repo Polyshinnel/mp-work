@@ -3,6 +3,8 @@
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\Ozon\GetOzonLabelPage;
+use App\Http\Controllers\Ozon\OzonLabelController;
 use App\Http\Controllers\Ozon\OzonOrderController;
 use App\Http\Controllers\Ozon\OzonPageController;
 use App\Http\Controllers\Ozon\TestController;
@@ -59,6 +61,8 @@ Route::middleware([LoggedUser::class])->group(function () {
     Route::get('/ozon-list/delivered', OzonPageController::class);
     Route::get('/ozon-list/canceled', OzonPageController::class);
     Route::get('/ozon-list/all', OzonPageController::class);
+
+    Route::get('/ozon/getLabels', GetOzonLabelPage::class);
 });
 
 
