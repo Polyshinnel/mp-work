@@ -86,4 +86,22 @@ class OzonSettingsService
 
         return [];
     }
+
+    public function getOzonWatchableStatusList(): array
+    {
+        $watchableStatusList = [];
+        $ozonStatusList = $this->ozonSettingsRepository->getOzonStatusList();
+        if(!$ozonStatusList->isEmpty())
+        {
+            foreach ($ozonStatusList as $status)
+            {
+                if($status->watch_ozon_status)
+                {
+                    $watchableStatusList[] = $status->id;
+                }
+            }
+        }
+
+        return $watchableStatusList;
+    }
 }

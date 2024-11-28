@@ -1,14 +1,13 @@
 <?php
 
-namespace App\Http\Controllers\Ozon;
+namespace App\Jobs;
 
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\Ozon\OzonApi;
 use App\Http\Controllers\SimplaOrders\SimplaOrderController;
 use App\Service\CommonSettingsService;
 use App\Service\OzonProcessingService;
-use Illuminate\Http\Request;
 
-class OzonOrderController extends Controller
+class AddNewOzonOrders
 {
     private OzonApi $api;
     private SimplaOrderController $simplaOrderController;
@@ -32,8 +31,8 @@ class OzonOrderController extends Controller
     {
         date_default_timezone_set('Europe/Moscow');
         $currentDate = date("Y-m-d");
-        //$dateStart = sprintf('%sT%s.000Z', $currentDate, '00:00:00');
-        $dateStart = '2024-11-25T00:00:00.000Z';
+        $dateStart = sprintf('%sT%s.000Z', $currentDate, '00:00:00');
+        //$dateStart = '2024-11-25T00:00:00.000Z';
         $dateEnd = sprintf('%sT%s.000Z', $currentDate, '23:59:59');
         $warehouses = $this->commonSettingsService->getAllOzonWarehousesIds();
         $statusList = $this->commonSettingsService->getOzonStatusWatchList();

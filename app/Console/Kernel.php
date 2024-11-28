@@ -18,6 +18,8 @@ class Kernel extends ConsoleKernel
     {
         // $schedule->command('inspire')->hourly();
         $schedule->command('ozon:update-ozon-packing')->everyTenMinutes();
+        $schedule->command('ozon:update-ozon-order-status')->everyTenMinutes();
+        $schedule->command('ozon:update-ozon-order-site-info')->everyTenMinutes();
     }
 
     /**

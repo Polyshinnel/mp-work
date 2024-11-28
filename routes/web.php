@@ -5,7 +5,6 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Ozon\GetOzonLabelPage;
 use App\Http\Controllers\Ozon\OzonLabelController;
-use App\Http\Controllers\Ozon\OzonOrderController;
 use App\Http\Controllers\Ozon\OzonPageController;
 use App\Http\Controllers\Ozon\TestController;
 use App\Http\Controllers\Payment\GetPayments;
@@ -33,6 +32,7 @@ use App\Http\Controllers\Settings\OzonSettings\WarehouseAddPageController;
 use App\Http\Controllers\Settings\SettingsPageController;
 use App\Http\Controllers\Settings\StoreSettingsController;
 use App\Http\Middleware\LoggedUser;
+use App\Jobs\AddNewOzonOrders;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -96,5 +96,5 @@ Route::middleware([LoggedUser::class])->group(function () {
 
 Route::middleware([LoggedUser::class])->group(function () {
     Route::post('/ozon-list/test', TestController::class);
-    Route::get('/ozon-list/test-api', [OzonOrderController::class, 'getSimplaOrderProcessing']);
+    Route::get('/ozon-list/test-api', [AddNewOzonOrders::class, 'getSimplaOrderProcessing']);
 });

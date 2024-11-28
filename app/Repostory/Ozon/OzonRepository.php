@@ -31,4 +31,14 @@ class OzonRepository
     {
         return OzonOrder::where('ozon_status_id', $statusId)->get();
     }
+
+    public function getOzonWatchableOrderList(array $statusList): ?Collection
+    {
+        return OzonOrder::whereIn('ozon_status_id', $statusList)->get();
+    }
+
+    public function updateOzonOrderByPostingId(string $postingId, array $updateArr): void
+    {
+        OzonOrder::where('ozon_posting_id', $postingId)->update($updateArr);
+    }
 }

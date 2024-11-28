@@ -2,13 +2,13 @@
 
 namespace App\Console\Commands\Ozon;
 
-use App\Http\Controllers\Ozon\OzonOrderController;
+use App\Jobs\AddNewOzonOrders;
 use Illuminate\Console\Command;
 
 class UpdateOzonPacking extends Command
 {
-    private OzonOrderController $orderController;
-    public function __construct(OzonOrderController $orderController)
+    private AddNewOzonOrders $orderController;
+    public function __construct(AddNewOzonOrders $orderController)
     {
         parent::__construct();
         $this->orderController = $orderController;
@@ -26,7 +26,7 @@ class UpdateOzonPacking extends Command
      *
      * @var string
      */
-    protected $description = 'Получает данные о заказах в Озон';
+    protected $description = 'Получает данные о новых заказах в Озон';
 
     /**
      * Execute the console command.
@@ -34,6 +34,6 @@ class UpdateOzonPacking extends Command
     public function handle(): int
     {
         $this->orderController->addOrderToOrderList();
-        return 1;
+        return 0;
     }
 }

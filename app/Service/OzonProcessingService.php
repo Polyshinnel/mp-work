@@ -8,6 +8,7 @@ use App\Repostory\CommonSettings\CommonSettingsRepository;
 use App\Repostory\Ozon\OzonRepository;
 use App\Repostory\OzonSettings\OzonSettingsRepository;
 use DateTime;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
 class OzonProcessingService
@@ -188,5 +189,37 @@ class OzonProcessingService
     {
         $filter[] = ['ozon_posting_id', '=', $ozonPostingId];
         return $this->ozonRepository->getFilteredOzonPacking($filter);
+    }
+
+    public function getOzonWatchableOrders(): ?Collection
+    {
+        $statusList = $this->ozonSettingsService->getOzonWatchableStatusList();
+        return $this->ozonRepository->getOzonWatchableOrderList($statusList);
+    }
+
+    public function updateOzonOrder(array $ozonOrder): void
+    {
+        $postingId = $ozonOrder['result']['posting_number'];
+        $ozonStatusName = $ozonOrder['result']['status'];
+        $ozonStatus = $this->ozonSettingsRepository->getOzonStatusByName($ozonStatusName);
+        if($ozonStatus){
+            $updateArr = [
+                'ozon_status_id' => $ozonStatus->id
+            ];
+            $this->ozonRepository->updateOzonOrderByPostingId($postingId, $updateArr);
+        }
+    }
+
+    public function updateOzonOrderSite(int $orderId, array $siteInfo, array $commonSettings): void
+    {
+        $simplaSiteStatusId = $siteInfo['status'];
+        $simplaSiteLabelId = $siteInfo['labels']['label_id'];
+        $siteStatusId = $commonSettings['site_status'][$simplaSiteStatusId];
+        $siteLabelId = $commonSettings['labels'][$simplaSiteLabelId];
+        $updateArr = [
+            'site_status_id' => $siteStatusId,
+            'site_label_id' => $siteLabelId,
+        ];
+        $this->ozonRepository->updateOzonOrder($updateArr, $orderId);
     }
 }

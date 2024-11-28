@@ -48,6 +48,10 @@ class OzonApi extends Controller
     public function getPostings(string $postingId)
     {
         $url = 'https://api-seller.ozon.ru/v3/posting/fbs/get';
+        $jsonArr = [
+            'posting_number' => $postingId
+        ];
+        return $this->getPostJsonRequest($url, $this->headers, json_encode($jsonArr));
     }
 
     private function getPostJsonRequest($url,$headers, $json): bool|string
