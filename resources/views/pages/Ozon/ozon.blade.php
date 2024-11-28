@@ -24,6 +24,49 @@
             <div class="card-body">
                 <div class="tab-content">
                     <div class="card-body table-responsive p-0">
+                        <div class="filter-block-unit">
+                            <div class="filter-block-unit__item">
+                                <div class="form-group">
+                                    <label for="search-input">Поиск</label>
+                                    <input type="text" class="form-control" id="search-input" name="search-input" placeholder="Поиск по таблице">
+                                </div>
+                            </div>
+
+                            <div class="filter-block-unit__item">
+                                <div class="form-group">
+                                    <label for="site_status">Статус на сайте</label>
+                                    <select class="form-control" name="site_status" id="site_status">
+                                        <option value="0">Не выбрано</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="filter-block-unit__item">
+                                <div class="form-group">
+                                    <label for="warehouse_mark">Метка склада</label>
+                                    <select class="form-control" name="warehouse_mark" id="warehouse_mark">
+                                        <option value="0">Не выбрано</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="filter-block-unit__item">
+                                <div class="form-group">
+                                    <label for="warehouse">Склад</label>
+                                    <select class="form-control" name="warehouse" id="warehouse">
+                                        <option value="0">Не выбрано</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="filter-block-unit__item">
+                                <button type="button" class="btn btn-block btn-primary" id="filter-data">Фильтровать</button>
+                            </div>
+
+                            <div class="filter-block-unit__item">
+                                <button type="button" class="btn btn-block btn-default" id="reset-data">Сбросить</button>
+                            </div>
+                        </div>
                         <table id="order-table" class="table table-bordered table-striped">
                             <thead>
                             <tr style="text-align: center">
@@ -104,6 +147,11 @@
                     sLast: "Последняя" // This is the link to the last page
                 }
             }
+        });
+
+        let selector = $('#order-table_wrapper').find('.row .col-sm-12').first()
+        $('#search-input').on('keyup', function () {
+            table.search(this.value).draw();
         });
     </script>
 @endsection

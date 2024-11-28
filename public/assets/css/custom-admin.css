@@ -8,7 +8,25 @@
 }
 
 #order-table_filter{
-    display: flex;
+    display: none;
     align-items: center;
     justify-content: flex-end;
+}
+
+.filter-block-unit{
+    width: 100%;
+    display: flex;
+    align-items: flex-end;
+    column-gap: 30px;
+}
+
+.filter-block-unit__item{
+    display: flex;
+    align-items: center;
+    height: 86px;
+}
+
+.filter-block-unit__item button
+{
+    margin-top: 14px;
 }
