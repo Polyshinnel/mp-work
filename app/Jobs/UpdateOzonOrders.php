@@ -46,7 +46,9 @@ class UpdateOzonOrders
         if(!$ozonOrders->isEmpty()) {
             foreach ($ozonOrders as $ozonOrder) {
                 $result = $this->simplaOrderController->getOrder($ozonOrder->ozon_posting_id);
-                $this->ozonProcessingService->updateOzonOrderSite($ozonOrder->id, $result, $commonSettings);
+                if($result) {
+                    $this->ozonProcessingService->updateOzonOrderSite($ozonOrder->id, $result, $commonSettings);
+                }
             }
         }
     }

@@ -220,6 +220,13 @@ class OzonProcessingService
             'site_status_id' => $siteStatusId,
             'site_label_id' => $siteLabelId,
         ];
-        $this->ozonRepository->updateOzonOrder($updateArr, $orderId);
+
+        try {
+            $this->ozonRepository->updateOzonOrder($updateArr, $orderId);
+        } catch (\Exception $exception)
+        {
+            dd($exception->getMessage());
+        }
+
     }
 }

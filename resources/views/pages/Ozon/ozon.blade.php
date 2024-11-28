@@ -110,8 +110,8 @@
                                             <td><input type="checkbox" name="" id="" class="order-checkbox" data-item="{{$order['id']}}"></td>
                                             <td>{{$order['id']}}</td>
                                             <td>{{$order['date']['formatted_date']}}</td>
-                                            <td><a href="{{$order['site_link']}}">{{$order['site_order']}}</a></td>
-                                            <td><a href="{{$order['ozon_link']}}">{{$order['ozon_posting_id']}}</a></td>
+                                            <td><a target="_blank" href="{{$order['site_link']}}">{{$order['site_order']}}</a></td>
+                                            <td><a target="_blank" href="{{$order['ozon_link']}}">{{$order['ozon_posting_id']}}</a></td>
                                             <td>
                                                 <div style="border-radius: 20px; padding: 5px; background: {{$order['site_status_color']}}; text-align: center;">
                                                     {{$order['site_status_name']}}
@@ -136,6 +136,12 @@
                                 @endif
                             </tbody>
                         </table>
+
+                        @if($order_info[0]['has_btn'])
+                        <div class="download-labels-btn">
+                            <button type="button" class="btn btn-block btn-primary" id="download-label">Скачать наклейки</button>
+                        </div>
+                        @endif
                     </div>
                 </div>
             </div>
@@ -244,6 +250,42 @@
 
         $('#reset-data').click(function () {
             window.location.href = window.location.pathname
+        })
+
+        $('#all-checkbox').click(function () {
+            if($(this).is(':checked'))
+            {
+                $('.order-checkbox').each(function () {
+                    $(this).prop('checked', true)
+                })
+            } else {
+                $('.order-checkbox').each(function () {
+                    $(this).prop('checked', false)
+                })
+            }
+        })
+
+        $('#download-label').click(function () {
+            let idArr = []
+            $('.order-checkbox:checked').each(function () {
+                idArr.push($(this).attr('data-item'))
+            })
+            if(idArr.length > 0) {
+
+                let path = '/ozon/getLabels?';
+                for(let i = 0; i < idArr.length; i++)
+                {
+                    if(i == 0)
+                    {
+                        path += 'orders[]='+idArr[i]
+                    }else {
+                        path += '&orders[]='+idArr[i]
+                    }
+                }
+                window.location.href = path
+            } else {
+                alert('Выберите хотя бы один чекбокс!')
+            }
         })
     </script>
 @endsection
