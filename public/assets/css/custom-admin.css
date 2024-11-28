@@ -17,7 +17,18 @@
     width: 100%;
     display: flex;
     align-items: flex-end;
-    column-gap: 30px;
+    justify-content: space-between;
+}
+
+.filter-block-unit-block{
+    width: 60%;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+}
+
+.filter-block-unit-block_sm{
+    width: 30%;
 }
 
 .filter-block-unit__item{

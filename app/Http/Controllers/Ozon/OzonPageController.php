@@ -5,16 +5,28 @@ namespace App\Http\Controllers\Ozon;
 use App\Http\Controllers\BasePageController;
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Repostory\CommonSettings\CommonSettingsRepository;
+use App\Repostory\OzonSettings\OzonSettingsRepository;
+use App\Service\CommonSettingsService;
 use App\Service\OzonOrderService;
+use App\Service\OzonSettingsService;
 use Illuminate\Http\Request;
 
 class OzonPageController extends BasePageController
 {
     private OzonOrderService $ozonOrderService;
+    private CommonSettingsRepository $commonSettingsRepository;
+    private OzonSettingsRepository $ozonSettingsRepository;
 
-    public function __construct(OzonOrderService $ozonOrderService)
+    public function __construct(
+        OzonOrderService $ozonOrderService,
+        CommonSettingsRepository $commonSettingsRepository,
+        OzonSettingsRepository $ozonSettingsRepository
+    )
     {
         $this->ozonOrderService = $ozonOrderService;
+        $this->commonSettingsRepository = $commonSettingsRepository;
+        $this->ozonSettingsRepository = $ozonSettingsRepository;
     }
 
     public function __invoke(Request $request)
@@ -24,6 +36,7 @@ class OzonPageController extends BasePageController
         $tabList = $this->getActiveTabByPageUrl($pageUrl);
 
         $orderStatus = $this->getStatusByPageUrl($pageUrl);
+        $filters = $this->getFiltersOptions();
         $ozonOrders = [];
 
         if($orderStatus != 0) {
@@ -38,6 +51,7 @@ class OzonPageController extends BasePageController
                 'link' => '/ozon',
                 'order_info' => $ozonOrders,
                 'tabList' => $tabList,
+                'filters' => $filters
             ]
         );
     }
@@ -125,5 +139,43 @@ class OzonPageController extends BasePageController
         }
 
         return $reformatTabList;
+    }
+
+    private function getFiltersOptions(): array
+    {
+        $siteStatusList = $this->commonSettingsRepository->getSiteStatusList();
+        $siteLabelList = $this->commonSettingsRepository->getSiteLabels();
+        $warehouseList = $this->ozonSettingsRepository->getOzonWarehouseList();
+
+        $filters = [];
+
+        if(!$siteStatusList->isEmpty()){
+            foreach ($siteStatusList as $siteStatus) {
+                $filters['site_status'][] = [
+                    'id' => $siteStatus->id,
+                    'name' => $siteStatus->name
+                ];
+            }
+        }
+
+        if(!$siteLabelList->isEmpty()){
+            foreach ($siteLabelList as $siteLabel) {
+                $filters['site_label'][] = [
+                    'id' => $siteLabel->id,
+                    'name' => $siteLabel->name
+                ];
+            }
+        }
+
+        if(!$warehouseList->isEmpty()){
+            foreach ($warehouseList as $warehouse) {
+                $filters['warehouse'][] = [
+                    'id' => $warehouse->id,
+                    'name' => $warehouse->name
+                ];
+            }
+        }
+
+        return $filters;
     }
 }

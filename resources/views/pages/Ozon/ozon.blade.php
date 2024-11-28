@@ -25,47 +25,69 @@
                 <div class="tab-content">
                     <div class="card-body table-responsive p-0">
                         <div class="filter-block-unit">
-                            <div class="filter-block-unit__item">
-                                <div class="form-group">
-                                    <label for="search-input">Поиск</label>
-                                    <input type="text" class="form-control" id="search-input" name="search-input" placeholder="Поиск по таблице">
+                            <div class="filter-block-unit-block filter-block-unit-block_sm">
+                                <div class="filter-block-unit__item">
+                                    <div class="form-group">
+                                        <label for="search-input">Поиск</label>
+                                        <input type="text" class="form-control" id="search-input" name="search-input" placeholder="Поиск по таблице">
+                                    </div>
                                 </div>
                             </div>
 
-                            <div class="filter-block-unit__item">
-                                <div class="form-group">
-                                    <label for="site_status">Статус на сайте</label>
-                                    <select class="form-control" name="site_status" id="site_status">
-                                        <option value="0">Не выбрано</option>
-                                    </select>
+                            <div class="filter-block-unit-block">
+                                <div class="filter-block-unit__item">
+                                    <div class="form-group">
+                                        <label for="site_status">Статус на сайте</label>
+                                        <select class="form-control" name="site_status" id="site_status">
+                                            <option value="0">Не выбрано</option>
+                                            @if($filters['site_status'])
+                                                @foreach($filters['site_status'] as $filter)
+                                                    <option value="{{$filter['id']}}">{{$filter['name']}}</option>
+                                                @endforeach
+                                            @endif
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="filter-block-unit__item">
+                                    <div class="form-group">
+                                        <label for="warehouse_mark">Метка склада</label>
+                                        <select class="form-control" name="warehouse_mark" id="warehouse_mark">
+                                            <option value="0">Не выбрано</option>
+                                            @if($filters['site_label'])
+                                                @foreach($filters['site_label'] as $filter)
+                                                    <option value="{{$filter['id']}}">{{$filter['name']}}</option>
+                                                @endforeach
+                                            @endif
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="filter-block-unit__item">
+                                    <div class="form-group">
+                                        <label for="warehouse">Склад</label>
+                                        <select class="form-control" name="warehouse" id="warehouse">
+                                            <option value="0">Не выбрано</option>
+                                            @if($filters['warehouse'])
+                                                @foreach($filters['warehouse'] as $filter)
+                                                    <option value="{{$filter['id']}}">{{$filter['name']}}</option>
+                                                @endforeach
+                                            @endif
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="filter-block-unit__item">
+                                    <button type="button" class="btn btn-block btn-primary" id="filter-data">Фильтровать</button>
+                                </div>
+
+                                <div class="filter-block-unit__item">
+                                    <button type="button" class="btn btn-block btn-default" id="reset-data">Сбросить</button>
                                 </div>
                             </div>
 
-                            <div class="filter-block-unit__item">
-                                <div class="form-group">
-                                    <label for="warehouse_mark">Метка склада</label>
-                                    <select class="form-control" name="warehouse_mark" id="warehouse_mark">
-                                        <option value="0">Не выбрано</option>
-                                    </select>
-                                </div>
-                            </div>
 
-                            <div class="filter-block-unit__item">
-                                <div class="form-group">
-                                    <label for="warehouse">Склад</label>
-                                    <select class="form-control" name="warehouse" id="warehouse">
-                                        <option value="0">Не выбрано</option>
-                                    </select>
-                                </div>
-                            </div>
 
-                            <div class="filter-block-unit__item">
-                                <button type="button" class="btn btn-block btn-primary" id="filter-data">Фильтровать</button>
-                            </div>
-
-                            <div class="filter-block-unit__item">
-                                <button type="button" class="btn btn-block btn-default" id="reset-data">Сбросить</button>
-                            </div>
                         </div>
                         <table id="order-table" class="table table-bordered table-striped">
                             <thead>
@@ -153,5 +175,15 @@
         $('#search-input').on('keyup', function () {
             table.search(this.value).draw();
         });
+    </script>
+
+    <script>
+        $('#filter-data').click(function (){
+            let siteStatus = $('#site_status').val()
+            let siteLabel = $('#warehouse_mark').val()
+            let warehouse = $('#warehouse').val()
+
+            console.log([warehouse, siteLabel, siteStatus]);
+        })
     </script>
 @endsection
