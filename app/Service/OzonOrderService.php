@@ -4,6 +4,7 @@ namespace App\Service;
 
 use App\Http\Controllers\Utils\TimeController;
 use App\Repostory\Ozon\OzonRepository;
+use Illuminate\Database\Eloquent\Collection;
 
 class OzonOrderService
 {
@@ -15,10 +16,40 @@ class OzonOrderService
         $this->timeController = $timeController;
     }
 
-    public function getOzonOrderList(int $ozonStatusId): array
+    public function getOzonFilteredOrder(int $statusId, array $queryFilter): ?Collection
+    {
+        $filter = [];
+        if($statusId != 0) {
+            $filter[] = [
+                'ozon_status_id', '=', $statusId
+            ];
+            if(isset($queryFilter['site_status']))
+            {
+                $filter[] = [
+                    'site_status_id', '=', $queryFilter['site_status']
+                ];
+            }
+            if(isset($queryFilter['label']))
+            {
+                $filter[] = [
+                    'site_label_id', '=', $queryFilter['label']
+                ];
+            }
+            if(isset($queryFilter['warehouse']))
+            {
+                $filter[] = [
+                    'ozon_warehouse_id', '=', $queryFilter['warehouse']
+                ];
+            }
+            return $ozonOrder = $this->ozonRepository->getFilteredOzonOrders($filter);
+        }
+
+        return $this->ozonRepository->getAllOrders();
+    }
+
+    public function getOzonOrderList(Collection $orders): array
     {
         $result = [];
-        $orders = $this->ozonRepository->getOzonOrderListByStatus($ozonStatusId);
         if(!$orders->isEmpty()){
             foreach ($orders as $order) {
                 $labelInfo = $order->siteLabel;

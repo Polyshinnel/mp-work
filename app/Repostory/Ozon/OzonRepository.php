@@ -22,6 +22,16 @@ class OzonRepository
         return OzonOrder::where($filter)->first();
     }
 
+    public function getFilteredOzonOrders(array $filter): ?Collection
+    {
+        return OzonOrder::where($filter)->get();
+    }
+
+    public function getAllOrders(): ?Collection
+    {
+        return OzonOrder::all();
+    }
+
     public function getOzonOrderById(int $id): ?OzonOrder
     {
         return OzonOrder::find($id);

@@ -37,11 +37,10 @@ class OzonPageController extends BasePageController
 
         $orderStatus = $this->getStatusByPageUrl($pageUrl);
         $filters = $this->getFiltersOptions();
-        $ozonOrders = [];
+        $orderQueryFilters = $this->getFilters($request);
 
-        if($orderStatus != 0) {
-            $ozonOrders = $this->ozonOrderService->getOzonOrderList($orderStatus);
-        }
+        $ozonOrders = $this->ozonOrderService->getOzonFilteredOrder($orderStatus, $orderQueryFilters);
+        $formattedOrder = $this->ozonOrderService->getOzonOrderList($ozonOrders);
 
 
         return view(
@@ -49,7 +48,7 @@ class OzonPageController extends BasePageController
             [
                 'pageInfo' => $pageInfo,
                 'link' => '/ozon',
-                'order_info' => $ozonOrders,
+                'order_info' => $formattedOrder,
                 'tabList' => $tabList,
                 'filters' => $filters
             ]
@@ -177,5 +176,27 @@ class OzonPageController extends BasePageController
         }
 
         return $filters;
+    }
+
+    private function getFilters(Request $request)
+    {
+        $filter = [];
+
+        if($request->query('status'))
+        {
+            $filter['site_status'] = $request->query('status');
+        }
+
+        if($request->query('label'))
+        {
+            $filter['label'] = $request->query('label');
+        }
+
+        if($request->query('warehouse'))
+        {
+            $filter['warehouse'] = $request->query('warehouse');
+        }
+
+        return $filter;
     }
 }

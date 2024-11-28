@@ -178,12 +178,72 @@
     </script>
 
     <script>
+        $(document).ready(function () {
+            let queryParameters = window.location.search
+            if(queryParameters.length > 0) {
+                queryParameters = queryParameters.substring(1);
+                let parametersArr = queryParameters.split('&')
+                if(parametersArr.length > 0)
+                {
+                    let paramObj = {}
+                    for(let i = 0; i < parametersArr.length; i++) {
+                        let query = parametersArr[i].split('=')
+                        paramObj[query[0]] = query[1]
+                    }
+
+                    let keys = Object.keys(paramObj)
+                    for(let i = 0; i < keys.length; i++)
+                    {
+                        if(keys[i] == 'status')
+                        {
+                            let siteStatus = $('#site_status').val(paramObj[keys[i]])
+
+                        }
+
+                        if(keys[i] == 'label')
+                        {
+                            let siteLabel = $('#warehouse_mark').val(paramObj[keys[i]])
+
+                        }
+
+                        if(keys[i] == 'warehouse')
+                        {
+                            let warehouse = $('#warehouse').val(paramObj[keys[i]])
+                        }
+                    }
+                }
+            }
+        })
+
+
         $('#filter-data').click(function (){
             let siteStatus = $('#site_status').val()
             let siteLabel = $('#warehouse_mark').val()
             let warehouse = $('#warehouse').val()
 
-            console.log([warehouse, siteLabel, siteStatus]);
+            let filter = {};
+            if(siteStatus != 0) {
+                filter.status = siteStatus
+            }
+            if(siteLabel != 0) {
+                filter.label = siteLabel
+            }
+
+            if(warehouse != 0) {
+                filter.warehouse = warehouse
+            }
+
+            if(!jQuery.isEmptyObject(filter)){
+                let path = window.location.pathname;
+                let searchParam = new URLSearchParams(filter)
+                searchParam = searchParam.toString()
+                path = `${path}?${searchParam}`
+                window.location.href = path
+            }
+        })
+
+        $('#reset-data').click(function () {
+            window.location.href = window.location.pathname
         })
     </script>
 @endsection
