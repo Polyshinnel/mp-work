@@ -100,11 +100,13 @@ class OzonOrderService
     {
         $result = [];
         $count = 0;
+        $totalCount = 0;
         $tempArr = [];
         foreach ($orders as $order)
         {
             $siteInfo = $order->siteInfo;
             $count++;
+            $totalCount++;
             $tempArr[] = [
                 'id' => $order->site_order_id,
                 'database' => $siteInfo->db_name
@@ -114,6 +116,9 @@ class OzonOrderService
                 $result[] = $tempArr;
                 $tempArr = [];
                 $count = 0;
+            }
+            if($totalCount == count($orders)){
+                $result[] = $tempArr;
             }
         }
         return $result;
