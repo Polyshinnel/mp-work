@@ -53,7 +53,7 @@ class GetOzonLabelPage extends Controller
         curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
         $response = curl_exec($ch);
-        file_put_contents($fileName, $response);
+        //file_put_contents($fileName, $response);
 
         $info = Storage::disk('labels')->put($fileName, $response);
         return '/public/ozon-labels/'.$fileName;

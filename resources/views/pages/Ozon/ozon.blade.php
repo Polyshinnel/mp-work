@@ -95,7 +95,7 @@
                         @if($order_info)
                             @if($order_info[0]['has_btn'])
                                 <div class="download-labels-btn download-labels-btn-top">
-                                    <button type="button" class="btn btn-block btn-primary" id="download-label">Скачать наклейки</button>
+                                    <button type="button" class="btn btn-block btn-primary" id="download-label1">Скачать наклейки</button>
                                 </div>
                             @endif
                         @endif
@@ -124,12 +124,12 @@
                                             <td><a target="_blank" href="{{$order['site_link']}}">{{$order['site_order']}}</a></td>
                                             <td><a target="_blank" href="{{$order['ozon_link']}}">{{$order['ozon_posting_id']}}</a></td>
                                             <td>
-                                                <div style="border-radius: 20px; padding: 5px; background: {{$order['site_status_color']}}; text-align: center;">
+                                                <div style="border: 1px solid #ccc;border-radius: 20px; padding: 5px; background: {{$order['site_status_color']}}; text-align: center;">
                                                     {{$order['site_status_name']}}
                                                 </div>
                                             </td>
                                             <td>
-                                                <div style="border-radius: 20px; padding: 5px; background: {{$order['site_label_color']}}; text-align: center;">
+                                                <div style="border: 1px solid #ccc;border-radius: 20px; padding: 5px; background: {{$order['site_label_color']}}; text-align: center;">
                                                     {{$order['site_label_name']}}
                                                 </div>
                                             </td>
@@ -283,7 +283,8 @@
             }
         })
 
-        $('#download-label').click(function () {
+        function downloadLabel()
+        {
             let idArr = []
             $('.order-checkbox:checked').each(function () {
                 idArr.push($(this).attr('data-item'))
@@ -304,10 +305,17 @@
             } else {
                 alert('Выберите хотя бы один чекбокс!')
             }
+        }
+
+        $('#download-label, #download-label1').click(function () {
+            downloadLabel()
         })
 
         $('.page-link').click(function () {
             $('.all-checkbox').prop('checked', false)
+            $('.order-checkbox').each(function () {
+                $(this).prop('checked', false)
+            })
         })
     </script>
 @endsection
