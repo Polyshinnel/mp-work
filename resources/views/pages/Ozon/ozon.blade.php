@@ -92,7 +92,7 @@
                         <table id="order-table" class="table table-bordered table-striped">
                             <thead>
                             <tr style="text-align: center">
-                                <th><input type="checkbox" name="all" id="all-checkbox"></th>
+                                <th><input type="checkbox" name="all" class="all-checkbox"></th>
                                 <th>ID</th>
                                 <th>Дата</th>
                                 <th>Номер заказа</th>
@@ -137,10 +137,12 @@
                             </tbody>
                         </table>
 
-                        @if($order_info[0]['has_btn'])
-                        <div class="download-labels-btn">
-                            <button type="button" class="btn btn-block btn-primary" id="download-label">Скачать наклейки</button>
-                        </div>
+                        @if($order_info)
+                            @if($order_info[0]['has_btn'])
+                            <div class="download-labels-btn">
+                                <button type="button" class="btn btn-block btn-primary" id="download-label">Скачать наклейки</button>
+                            </div>
+                            @endif
                         @endif
                     </div>
                 </div>
@@ -252,7 +254,7 @@
             window.location.href = window.location.pathname
         })
 
-        $('#all-checkbox').click(function () {
+        $('.all-checkbox').click(function () {
             if($(this).is(':checked'))
             {
                 $('.order-checkbox').each(function () {
