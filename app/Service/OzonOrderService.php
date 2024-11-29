@@ -19,32 +19,35 @@ class OzonOrderService
     public function getOzonFilteredOrder(int $statusId, array $queryFilter): ?Collection
     {
         $filter = [];
+
         if($statusId != 0) {
             $filter[] = [
                 'ozon_status_id', '=', $statusId
             ];
-            if(isset($queryFilter['site_status']))
-            {
-                $filter[] = [
-                    'site_status_id', '=', $queryFilter['site_status']
-                ];
-            }
-            if(isset($queryFilter['label']))
-            {
-                $filter[] = [
-                    'site_label_id', '=', $queryFilter['label']
-                ];
-            }
-            if(isset($queryFilter['warehouse']))
-            {
-                $filter[] = [
-                    'ozon_warehouse_id', '=', $queryFilter['warehouse']
-                ];
-            }
-            return $ozonOrder = $this->ozonRepository->getFilteredOzonOrders($filter);
         }
-
-        return $this->ozonRepository->getAllOrders();
+        if(isset($queryFilter['site_status']))
+        {
+            $filter[] = [
+                'site_status_id', '=', $queryFilter['site_status']
+            ];
+        }
+        if(isset($queryFilter['label']))
+        {
+            $filter[] = [
+                'site_label_id', '=', $queryFilter['label']
+            ];
+        }
+        if(isset($queryFilter['warehouse']))
+        {
+            $filter[] = [
+                'ozon_warehouse_id', '=', $queryFilter['warehouse']
+            ];
+        }
+        if($filter){
+            return $ozonOrder = $this->ozonRepository->getFilteredOzonOrders($filter);
+        } else {
+            return $this->ozonRepository->getAllOrders();
+        }
     }
 
     public function getOzonOrderList(Collection $orders): array
@@ -59,7 +62,7 @@ class OzonOrderService
                 $ozonStatus = $order->ozonStatus;
 
                 $date = $this->timeController->reformatDateTime($order->date_order_create);
-                $siteLink = $site->host.'panel/?module=OrderAdmin&id='.$order->site_order_id;
+                $siteLink = $site->host.'panel?module=OrderAdmin&id='.$order->site_order_id;
                 $siteOrderName = $site->prefix.'-'.$order->site_order_id;
                 $ozonLink = sprintf(
                     'https://seller.ozon.ru/app/postings/fbs?tab=%s&show=postings&postingDetails=%s',

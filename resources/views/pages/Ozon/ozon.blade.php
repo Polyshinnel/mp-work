@@ -311,7 +311,7 @@
             downloadLabel()
         })
 
-        $('.page-link').click(function () {
+        $('.paginate_button').click(function () {
             $('.all-checkbox').prop('checked', false)
             $('.order-checkbox').each(function () {
                 $(this).prop('checked', false)
