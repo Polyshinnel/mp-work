@@ -23,7 +23,7 @@
             </div>
             <div class="card-body">
                 <div class="tab-content">
-                    <div class="card-body table-responsive p-0">
+                    <div class="card-body card-body-table table-responsive p-0">
                         <div class="filter-block-unit">
                             <div class="filter-block-unit-block filter-block-unit-block_sm">
                                 <div class="filter-block-unit__item">
@@ -89,9 +89,20 @@
 
 
                         </div>
-                        <table id="order-table" class="table table-bordered table-striped">
+
+
+
+                        @if($order_info)
+                            @if($order_info[0]['has_btn'])
+                                <div class="download-labels-btn download-labels-btn-top">
+                                    <button type="button" class="btn btn-block btn-primary" id="download-label">Скачать наклейки</button>
+                                </div>
+                            @endif
+                        @endif
+
+                        <table id="order-table" class="table table-bordered table-striped" >
                             <thead>
-                            <tr style="text-align: center">
+                            <tr style="text-align: center" class="table-head">
                                 <th><input type="checkbox" name="all" class="all-checkbox"></th>
                                 <th>ID</th>
                                 <th>Дата</th>
@@ -169,6 +180,11 @@
             order: [[0, 'desc']],
             pageLength: 20,
             lengthChange: false,
+            iDisplayLength: -1,
+            columnDefs: [ {
+                targets: 0,
+                orderable: false
+            } ],
             oLanguage: {
                 oPaginate: {
                     sFirst: "Первая", // This is the link to the first page
@@ -288,6 +304,10 @@
             } else {
                 alert('Выберите хотя бы один чекбокс!')
             }
+        })
+
+        $('.page-link').click(function () {
+            $('.all-checkbox').prop('checked', false)
         })
     </script>
 @endsection

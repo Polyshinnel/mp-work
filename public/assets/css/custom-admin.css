@@ -45,3 +45,23 @@
 .download-labels-btn{
     margin-top: 20px;
 }
+
+.card-body-table{
+    position: relative;
+}
+
+.input-all-checkbox{
+    position: absolute;
+    width: 48px;
+    height: 45px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    top: 80px;
+    left: 10px;
+    z-index: 500;
+}
+
+.download-labels-btn-top{
+    margin-bottom: 20px;
+}
