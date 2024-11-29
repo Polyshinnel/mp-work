@@ -121,7 +121,7 @@
                                             <td><input type="checkbox" name="" id="" class="order-checkbox" data-item="{{$order['id']}}"></td>
                                             <td>{{$order['id']}}</td>
                                             <td>{{$order['date']['formatted_date']}}</td>
-                                            <td><a target="_blank" href="{{$order['site_link']}}">{{$order['site_order']}}</a></td>
+                                            <td><a href="{{$order['site_link']}}">{{$order['site_order']}}</a></td>
                                             <td><a target="_blank" href="{{$order['ozon_link']}}">{{$order['ozon_posting_id']}}</a></td>
                                             <td>
                                                 <div style="border: 1px solid #ccc;border-radius: 20px; padding: 5px; background: {{$order['site_status_color']}}; text-align: center;">
