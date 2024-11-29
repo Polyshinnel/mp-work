@@ -33,7 +33,7 @@ class UpdateOzonOrderSiteInfo extends Command
      */
     public function handle(): int
     {
-        $this->orderJob->updateSiteStatus();
+        $this->orderJob->updateSiteStatusArr();
         return 0;
     }
 }

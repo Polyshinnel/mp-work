@@ -229,4 +229,22 @@ class OzonProcessingService
         }
 
     }
+
+    public function updateOzonOrderSiteBySiteInfo(string $siteOrderId, array $siteInfo, array $commonSettings)
+    {
+        $simplaSiteStatusId = $siteInfo['status'];
+        $simplaSiteLabelId = $siteInfo['labels']['label_id'];
+        $siteStatusId = $commonSettings['site_status'][$simplaSiteStatusId];
+        $siteLabelId = $commonSettings['labels'][$simplaSiteLabelId];
+        $updateArr = [
+            'site_status_id' => $siteStatusId,
+            'site_label_id' => $siteLabelId,
+        ];
+        try {
+            $this->ozonRepository->updateOzonOrderByOzonPostingId($updateArr, $siteOrderId);
+        } catch (\Exception $exception)
+        {
+            dd($exception->getMessage());
+        }
+    }
 }

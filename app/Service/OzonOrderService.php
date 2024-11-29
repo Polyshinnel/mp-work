@@ -95,4 +95,27 @@ class OzonOrderService
         }
         return $result;
     }
+
+    public function getOzonOrderListBlock($orders): array
+    {
+        $result = [];
+        $count = 0;
+        $tempArr = [];
+        foreach ($orders as $order)
+        {
+            $siteInfo = $order->siteInfo;
+            $count++;
+            $tempArr[] = [
+                'id' => $order->site_order_id,
+                'database' => $siteInfo->db_name
+            ];
+            if($count > 40)
+            {
+                $result[] = $tempArr;
+                $tempArr = [];
+                $count = 0;
+            }
+        }
+        return $result;
+    }
 }

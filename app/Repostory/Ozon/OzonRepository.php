@@ -17,6 +17,11 @@ class OzonRepository
         OzonOrder::where('id', $ozonOrderId)->update($updateArr);
     }
 
+    public function updateOzonOrderByOzonPostingId(array $updateArr, string $siteOrderId): void
+    {
+        OzonOrder::where('ozon_posting_id', $siteOrderId)->update($updateArr);
+    }
+
     public function getFilteredOzonPacking(array $filter): ?OzonOrder
     {
         return OzonOrder::where($filter)->first();
