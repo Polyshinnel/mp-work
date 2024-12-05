@@ -8,6 +8,7 @@ use App\Service\CommonSettingsService;
 use App\Service\OzonOrderService;
 use App\Service\OzonProcessingService;
 use App\Service\OzonSettingsService;
+use DateTime;
 
 class UpdateOzonOrders
 {
@@ -40,11 +41,13 @@ class UpdateOzonOrders
         $warehouses = $this->ozonSettingsService->getOzonWarehouses();
         $statusList = $this->ozonSettingsService->getOzonWatchableStatusNames();
         $formattedPostings = [];
-        date_default_timezone_set('Europe/Moscow');
-        $currentDate = date("Y-m-d");
-        $dateStart = sprintf('%sT%s.000Z', $currentDate, '00:00:00');
+        $currentDate= new DateTime();
+        $today = $currentDate->format('Y-m-d');
+        $currentDate->modify('-1 day');
+        $yesterday = $currentDate->format('Y-m-d');
+        $dateStart = sprintf('%sT%s.000Z', $yesterday, '00:00:00');
         //$dateStart = '2024-11-25T00:00:00.000Z';
-        $dateEnd = sprintf('%sT%s.000Z', $currentDate, '23:59:59');
+        $dateEnd = sprintf('%sT%s.000Z', $today, '23:59:59');
         foreach ($statusList as $status) {
             $result = $this->api->getFilteredPostings($dateStart, $dateEnd, $warehouses, $status);
             if($result)

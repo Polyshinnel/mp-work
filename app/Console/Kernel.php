@@ -2,7 +2,7 @@
 
 namespace App\Console;
 
-use App\Console\Commands\Ozon\UpdateOzonPacking;
+use App\Console\Commands\Ozon\GetNewOzonPacking;
 use App\ScheduledJobs\GetHourlyPayment;
 use App\ScheduledJobs\GetHourlyReturning;
 use Illuminate\Console\Scheduling\Schedule;
@@ -17,7 +17,7 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule): void
     {
         // $schedule->command('inspire')->hourly();
-        $schedule->command('ozon:update-ozon-packing')->everyTenMinutes();
+        $schedule->command('ozon:get-new-ozon-packing')->everyTenMinutes();
         $schedule->command('ozon:update-ozon-order-status')->everyTenMinutes();
         $schedule->command('ozon:update-ozon-order-site-info')->everyTenMinutes();
     }

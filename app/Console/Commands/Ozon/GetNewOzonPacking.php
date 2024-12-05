@@ -5,7 +5,7 @@ namespace App\Console\Commands\Ozon;
 use App\Jobs\AddNewOzonOrders;
 use Illuminate\Console\Command;
 
-class UpdateOzonPacking extends Command
+class GetNewOzonPacking extends Command
 {
     private AddNewOzonOrders $orderController;
     public function __construct(AddNewOzonOrders $orderController)
@@ -19,7 +19,7 @@ class UpdateOzonPacking extends Command
      *
      * @var string
      */
-    protected $signature = 'ozon:update-ozon-packing';
+    protected $signature = 'ozon:get-new-ozon-packing';
 
     /**
      * The console command description.

@@ -6,6 +6,7 @@ use App\Http\Controllers\Ozon\OzonApi;
 use App\Http\Controllers\SimplaOrders\SimplaOrderController;
 use App\Service\CommonSettingsService;
 use App\Service\OzonProcessingService;
+use DateTime;
 
 class AddNewOzonOrders
 {
@@ -30,10 +31,13 @@ class AddNewOzonOrders
     public function addOrderToOrderList(): void
     {
         date_default_timezone_set('Europe/Moscow');
-        $currentDate = date("Y-m-d");
-        $dateStart = sprintf('%sT%s.000Z', $currentDate, '00:00:00');
+        $currentDate= new DateTime();
+        $today = $currentDate->format('Y-m-d');
+        $currentDate->modify('-1 day');
+        $yesterday = $currentDate->format('Y-m-d');
+        $dateStart = sprintf('%sT%s.000Z', $yesterday, '00:00:00');
         //$dateStart = '2024-11-25T00:00:00.000Z';
-        $dateEnd = sprintf('%sT%s.000Z', $currentDate, '23:59:59');
+        $dateEnd = sprintf('%sT%s.000Z', $today, '23:59:59');
         $warehouses = $this->commonSettingsService->getAllOzonWarehousesIds();
         $statusList = $this->commonSettingsService->getOzonStatusWatchList();
 
@@ -44,7 +48,7 @@ class AddNewOzonOrders
 
     }
 
-    public function getSimplaOrderProcessing($ozonOrders)
+    public function getSimplaOrderProcessing($ozonOrders): array
     {
         $simplaResult = [];
         if($ozonOrders){
