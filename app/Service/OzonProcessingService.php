@@ -134,7 +134,7 @@ class OzonProcessingService
         if($warehouses && $statuses){
             foreach($warehouses as $warehouse){
                 foreach($statuses as $status){
-                    $result = $api->getFilteredPostings($dateStart, $dateEnd, $warehouse, $status);
+                    $result = $api->getFilteredPostings($dateStart, $dateEnd, [$warehouse], $status);
                     if($result){
                         $result = json_decode($result, true);
                         if($result['result']['postings']) {
@@ -197,16 +197,21 @@ class OzonProcessingService
         return $this->ozonRepository->getOzonWatchableOrderList($statusList);
     }
 
-    public function updateOzonOrder(array $ozonOrder): void
+    public function updateOzonOrder(array $ozonOrders): void
     {
-        $postingId = $ozonOrder['result']['posting_number'];
-        $ozonStatusName = $ozonOrder['result']['status'];
-        $ozonStatus = $this->ozonSettingsRepository->getOzonStatusByName($ozonStatusName);
-        if($ozonStatus){
-            $updateArr = [
-                'ozon_status_id' => $ozonStatus->id
-            ];
-            $this->ozonRepository->updateOzonOrderByPostingId($postingId, $updateArr);
+        foreach ($ozonOrders as $order) {
+            $ozonStatus = $this->ozonSettingsRepository->getOzonStatusByName($order['status']);
+            if($ozonStatus)
+            {
+                $updateArr = [
+                    'ozon_status_id' => $ozonStatus->id
+                ];
+                $ozonPosting = $this->ozonRepository->getOzonOrderByPosting($order['posting_number']);
+                if($ozonPosting){
+                    $this->ozonRepository->updateOzonOrderByPostingId($order['posting_number'], $updateArr);
+                }
+
+            }
         }
     }
 

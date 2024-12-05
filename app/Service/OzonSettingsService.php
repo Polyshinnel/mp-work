@@ -104,4 +104,32 @@ class OzonSettingsService
 
         return $watchableStatusList;
     }
+
+    public function getOzonWarehouses(): array
+    {
+        $warehouses = $this->ozonSettingsRepository->getOzonWarehouseList();
+        $warehouseList = [];
+        if(!$warehouses->isEmpty())
+        {
+            foreach ($warehouses as $warehouse)
+            {
+                $warehouseList[] = $warehouse->warehouse_id;
+            }
+        }
+        return $warehouseList;
+    }
+
+    public function getOzonWatchableStatusNames(): array
+    {
+        $watchableStatusList = [];
+        $ozonStatusList = $this->ozonSettingsRepository->getOzonStatusList();
+        if(!$ozonStatusList->isEmpty())
+        {
+            foreach ($ozonStatusList as $status)
+            {
+                $watchableStatusList[] = $status->ozon_status_name;
+            }
+        }
+        return $watchableStatusList;
+    }
 }

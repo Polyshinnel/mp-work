@@ -20,7 +20,7 @@ class OzonApi extends Controller
             $apiKey
         ];
     }
-    public function getFilteredPostings($dateStart, $dateEnd, $warehouseId, $status)
+    public function getFilteredPostings($dateStart, $dateEnd, $warehouses, $status)
     {
         $url = 'https://api-seller.ozon.ru/v3/posting/fbs/list';
         $jsonArr = [
@@ -29,9 +29,7 @@ class OzonApi extends Controller
                 'since' => $dateStart,
                 'status' => $status,
                 'to' => $dateEnd,
-                'warehouse_id' => [
-                    $warehouseId
-                ]
+                'warehouse_id' => $warehouses
             ],
             'limit' => 500,
             'offset' => 0,

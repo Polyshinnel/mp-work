@@ -7,6 +7,7 @@ use App\Http\Controllers\SimplaOrders\SimplaOrderController;
 use App\Service\CommonSettingsService;
 use App\Service\OzonOrderService;
 use App\Service\OzonProcessingService;
+use App\Service\OzonSettingsService;
 
 class UpdateOzonOrders
 {
@@ -15,13 +16,15 @@ class UpdateOzonOrders
     private CommonSettingsService $commonSettingsService;
     private OzonProcessingService $ozonProcessingService;
     private OzonOrderService $ozonOrderService;
+    private OzonSettingsService $ozonSettingsService;
 
     public function __construct(
         OzonApi $api,
         SimplaOrderController $simplaOrderController,
         CommonSettingsService $commonSettingsService,
         OzonProcessingService $ozonProcessingService,
-        OzonOrderService $ozonOrderService
+        OzonOrderService $ozonOrderService,
+        OzonSettingsService $ozonSettingsService
     )
     {
         $this->api = $api;
@@ -29,17 +32,38 @@ class UpdateOzonOrders
         $this->commonSettingsService = $commonSettingsService;
         $this->ozonProcessingService = $ozonProcessingService;
         $this->ozonOrderService = $ozonOrderService;
+        $this->ozonSettingsService = $ozonSettingsService;
     }
 
     public function updateOzonStatus(): void
     {
-        $ozonOrders = $this->ozonProcessingService->getOzonWatchableOrders();
-        if(!$ozonOrders->isEmpty()) {
-            foreach($ozonOrders as $ozonOrder) {
-                $postingId = $ozonOrder->ozon_posting_id;
-                $ozonResult = json_decode($this->api->getPostings($postingId), true);
-                $this->ozonProcessingService->updateOzonOrder($ozonResult);
+        $warehouses = $this->ozonSettingsService->getOzonWarehouses();
+        $statusList = $this->ozonSettingsService->getOzonWatchableStatusNames();
+        $formattedPostings = [];
+        date_default_timezone_set('Europe/Moscow');
+        $currentDate = date("Y-m-d");
+        $dateStart = sprintf('%sT%s.000Z', $currentDate, '00:00:00');
+        //$dateStart = '2024-11-25T00:00:00.000Z';
+        $dateEnd = sprintf('%sT%s.000Z', $currentDate, '23:59:59');
+        foreach ($statusList as $status) {
+            $result = $this->api->getFilteredPostings($dateStart, $dateEnd, $warehouses, $status);
+            if($result)
+            {
+                $result = json_decode($result, true);
+                if(isset($result['result']['postings'])) {
+                    $postings = $result['result']['postings'];
+                    foreach($postings as $posting) {
+                        $formattedPostings[] = [
+                            'posting_number' => $posting['posting_number'],
+                            'status' => $posting['status'],
+                        ];
+                    }
+                }
             }
+        }
+
+        if($formattedPostings) {
+            $this->ozonProcessingService->updateOzonOrder($formattedPostings);
         }
     }
 
