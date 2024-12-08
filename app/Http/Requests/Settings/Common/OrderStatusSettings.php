@@ -25,6 +25,7 @@ class OrderStatusSettings extends FormRequest
             'status_name' => 'string',
             'status_id' => 'integer',
             'color' => 'string',
+            'watchable' => 'boolean'
         ];
     }
 }

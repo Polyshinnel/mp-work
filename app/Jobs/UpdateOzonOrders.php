@@ -46,7 +46,7 @@ class UpdateOzonOrders
         $currentDate->modify('-1 day');
         $yesterday = $currentDate->format('Y-m-d');
         $dateStart = sprintf('%sT%s.000Z', $yesterday, '00:00:00');
-        //$dateStart = '2024-11-25T00:00:00.000Z';
+        //$dateStart = '2024-11-30T00:00:00.000Z';
         $dateEnd = sprintf('%sT%s.000Z', $today, '23:59:59');
         foreach ($statusList as $status) {
             $result = $this->api->getFilteredPostings($dateStart, $dateEnd, $warehouses, $status);
@@ -60,10 +60,19 @@ class UpdateOzonOrders
                             'posting_number' => $posting['posting_number'],
                             'status' => $posting['status'],
                         ];
+
+//                        if($posting['posting_number'] == '21022408-1213-1')
+//                        {
+//                            dd([
+//                                'posting_number' => $posting['posting_number'],
+//                                'status' => $posting['status'],
+//                            ]);
+//                        }
                     }
                 }
             }
         }
+
 
         if($formattedPostings) {
             $this->ozonProcessingService->updateOzonOrder($formattedPostings);
@@ -88,7 +97,7 @@ class UpdateOzonOrders
 
     public function updateSiteStatusArr(): void
     {
-        $ozonOrders = $this->ozonProcessingService->getOzonWatchableOrders();
+        $ozonOrders = $this->ozonProcessingService->getSiteWatchableOrders();
         $commonSettings = $this->commonSettingsService->getCommonSettingsAssociativeData();
         $simplaResults = [];
         if(!$ozonOrders->isEmpty()) {

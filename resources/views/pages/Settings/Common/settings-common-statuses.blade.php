@@ -35,6 +35,7 @@
                             <th>ID статуса</th>
                             <th>Название</th>
                             <th>Цвет</th>
+                            <th>Отслеживаемый</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -45,6 +46,7 @@
                                         <td>{{$status['site_status_id']}}</td>
                                         <td>{{$status['name']}}</td>
                                         <td><div class="color-block" style="width: 25px; height: 25px; background: {{$status['color']}}"></div></td>
+                                        <td>{{$status['watchable']}}</td>
                                     </tr>
                                 @endforeach
                             @endif

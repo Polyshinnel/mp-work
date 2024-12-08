@@ -51,7 +51,8 @@ class CommonSettingsService
         $createArr = [
             'name' => $data['status_name'],
             'site_status_id' => $data['status_id'],
-            'color' => $data['color']
+            'color' => $data['color'],
+            'watchable' => $data['watchable']
         ];
         try {
             DB::beginTransaction();
@@ -144,5 +145,22 @@ class CommonSettingsService
         }
 
         return [];
+    }
+
+    public function getSiteStatusWatchableList(): array
+    {
+        $formattedList = [];
+        $siteStatusList = $this->commonSettingsRepository->getSiteStatusList();
+        if(!$siteStatusList->isEmpty())
+        {
+            foreach ($siteStatusList as $item)
+            {
+                if($item->watchable)
+                {
+                    $formattedList[] = $item->id;
+                }
+            }
+        }
+        return $formattedList;
     }
 }

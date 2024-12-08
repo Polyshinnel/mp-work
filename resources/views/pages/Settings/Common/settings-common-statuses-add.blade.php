@@ -26,6 +26,13 @@
                             <label for="color">Цвет(hex)</label>
                             <input type="text" class="form-control" id="color" name="color" placeholder="#ff0000">
                         </div>
+                        <div class="form-group">
+                            <label for="watchable">Конечный</label>
+                            <select class="form-control" name="watchable" id="watchable">
+                                <option value="0">Нет</option>
+                                <option value="1">Да</option>
+                            </select>
+                        </div>
                     </div>
                     <!-- /.card-body -->
 

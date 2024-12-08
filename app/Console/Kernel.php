@@ -20,6 +20,7 @@ class Kernel extends ConsoleKernel
         $schedule->command('ozon:get-new-ozon-packing')->everyTenMinutes();
         $schedule->command('ozon:update-ozon-order-status')->everyTenMinutes();
         $schedule->command('ozon:update-ozon-order-site-info')->everyTenMinutes();
+        $schedule->command('ozon:check-ozon-old-orders')->twiceDaily();
     }
 
     /**

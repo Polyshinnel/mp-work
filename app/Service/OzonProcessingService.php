@@ -191,10 +191,26 @@ class OzonProcessingService
         return $this->ozonRepository->getFilteredOzonPacking($filter);
     }
 
+    public function getOzonTwoDaysOrders(): ?Collection
+    {
+        $statusList = $this->ozonSettingsService->getOzonWatchableStatusList();
+        $ozonList = $this->ozonRepository->getOzonWatchableOrderList($statusList);
+        $filter = [
+            ['date_order_create', '<', now()->subDays(2)]
+        ];
+        return OzonOrder::where($filter)->whereIn('ozon_status_id', $statusList)->get();
+    }
+
     public function getOzonWatchableOrders(): ?Collection
     {
         $statusList = $this->ozonSettingsService->getOzonWatchableStatusList();
         return $this->ozonRepository->getOzonWatchableOrderList($statusList);
+    }
+
+    public function getSiteWatchableOrders(): ?Collection
+    {
+        $statusList = $this->commonSettingsService->getSiteStatusWatchableList();
+        return $this->ozonRepository->getSiteStatusWatchableList($statusList);
     }
 
     public function updateOzonOrder(array $ozonOrders): void
@@ -207,10 +223,9 @@ class OzonProcessingService
                     'ozon_status_id' => $ozonStatus->id
                 ];
                 $ozonPosting = $this->ozonRepository->getOzonOrderByPosting($order['posting_number']);
-                if($ozonPosting){
+                if($ozonPosting && $ozonPosting->ozon_status_id != $ozonStatus->id){
                     $this->ozonRepository->updateOzonOrderByPostingId($order['posting_number'], $updateArr);
                 }
-
             }
         }
     }
@@ -237,22 +252,28 @@ class OzonProcessingService
 
     public function updateOzonOrderSiteBySiteInfo(string $siteOrderId, array $siteInfo, array $commonSettings): void
     {
+        $simplaSiteStatusId = $siteInfo['status'];
+        $siteStatusId = $commonSettings['site_status'][$simplaSiteStatusId];
+        $updateArr = [
+            'site_status_id' => $siteStatusId,
+        ];
+
         if(isset($siteInfo['labels']['label_id']))
         {
-            $simplaSiteStatusId = $siteInfo['status'];
             $simplaSiteLabelId = $siteInfo['labels']['label_id'];
-            $siteStatusId = $commonSettings['site_status'][$simplaSiteStatusId];
             $siteLabelId = $commonSettings['labels'][$simplaSiteLabelId];
             $updateArr = [
                 'site_status_id' => $siteStatusId,
                 'site_label_id' => $siteLabelId,
             ];
-            try {
-                $this->ozonRepository->updateOzonOrderByOzonPostingId($updateArr, $siteOrderId);
-            } catch (\Exception $exception)
-            {
-                dd($exception->getMessage());
-            }
+
+        }
+
+        try {
+            $this->ozonRepository->updateOzonOrderByOzonPostingId($updateArr, $siteOrderId);
+        } catch (\Exception $exception)
+        {
+            dd($exception->getMessage());
         }
 
     }

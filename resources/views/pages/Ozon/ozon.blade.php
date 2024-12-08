@@ -94,9 +94,19 @@
 
                         @if($order_info)
                             @if($order_info[0]['has_btn'])
-                                <div class="download-labels-btn download-labels-btn-top">
-                                    <button type="button" class="btn btn-block btn-primary" id="download-label1">Скачать наклейки</button>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="download-labels-btn download-labels-btn-top">
+                                            <button type="button" class="btn btn-block btn-primary" id="download-label1">Скачать наклейки</button>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="download-labels-btn download-labels-btn-top">
+                                            <button type="button" class="btn btn-block btn-info" id="send-ks1">Отправить в кс</button>
+                                        </div>
+                                    </div>
                                 </div>
+
                             @endif
                         @endif
 
@@ -112,6 +122,8 @@
                                 <th>Метка склада</th>
                                 <th>Склад Озон</th>
                                 <th>Наклейка</th>
+                                <th>Статус</th>
+                                <th></th>
                             </tr>
                             </thead>
                             <tbody>
@@ -142,21 +154,44 @@
                                                 @endif
 
                                             </td>
+                                            <td>
+                                                @if($order['site_status_name'] != 'Резерв')
+                                                    <a href="/site/updateOrder?orders[]={{$order['id']}}"><button type="button" class="btn btn-block btn-primary">В КС</button></a>
+                                                @else
+                                                    <button type="button" class="btn btn-block btn-primary disabled">В КС</button>
+                                                @endif
+
+                                            </td>
+                                            <td>
+                                                <button type="button" class="btn btn-block btn-primary"><i class="fas fa-sync"></i></button>
+                                            </td>
                                         </tr>
                                     @endforeach
                                 @endif
                             </tbody>
                         </table>
 
-                        @if($order_info)
-                            @if($order_info[0]['has_btn'])
-                            <div class="download-labels-btn">
-                                <button type="button" class="btn btn-block btn-primary" id="download-label">Скачать наклейки</button>
-                            </div>
-                            @endif
-                        @endif
+
                     </div>
                 </div>
+
+                @if($order_info)
+                    @if($order_info[0]['has_btn'])
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="download-labels-btn download-labels-btn-top">
+                                    <button type="button" class="btn btn-block btn-primary" id="download-label">Скачать наклейки</button>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="download-labels-btn download-labels-btn-top">
+                                    <button type="button" class="btn btn-block btn-info" id="send-ks">Отправить в кс</button>
+                                </div>
+                            </div>
+                        </div>
+
+                    @endif
+                @endif
             </div>
             <!-- /.card -->
         </div>
