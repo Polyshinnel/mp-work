@@ -36,6 +36,10 @@
                                 <div class="filter-block-unit__item">
                                     <a href="/ozon-list/update-data"><button type="button" class="btn btn-block btn-primary">Обновить данные</button></a>
                                 </div>
+
+                                <div class="filter-block-unit__item">
+                                    <a href="/ozon-list/synchronize"><button type="button" class="btn btn-block btn-primary">Заказы с Озон</button></a>
+                                </div>
                             </div>
 
                             <div class="filter-block-unit-block">

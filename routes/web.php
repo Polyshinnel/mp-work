@@ -3,6 +3,7 @@
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\Ozon\GetNewOzonOrder;
 use App\Http\Controllers\Ozon\GetOzonLabelPage;
 use App\Http\Controllers\Ozon\OzonLabelController;
 use App\Http\Controllers\Ozon\OzonPageController;
@@ -101,4 +102,5 @@ Route::middleware([LoggedUser::class])->group(function () {
     Route::get('/ozon-list/update-data', UpdateOzonSiteStatusController::class);
     Route::get('/ozon-list/update-data/{id}', [UpdateOzonSiteStatusController::class, 'update']);
     Route::get('/site/updateOrder', [UpdateOzonSiteStatusController::class, 'updateStatus']);
+    Route::get('/ozon-list/synchronize', GetNewOzonOrder::class);
 });
