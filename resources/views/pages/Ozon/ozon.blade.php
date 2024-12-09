@@ -32,6 +32,10 @@
                                         <input type="text" class="form-control" id="search-input" name="search-input" placeholder="Поиск по таблице">
                                     </div>
                                 </div>
+
+                                <div class="filter-block-unit__item">
+                                    <a href="/ozon-list/update-data"><button type="button" class="btn btn-block btn-primary">Обновить данные</button></a>
+                                </div>
                             </div>
 
                             <div class="filter-block-unit-block">
@@ -163,7 +167,7 @@
 
                                             </td>
                                             <td>
-                                                <button type="button" class="btn btn-block btn-primary"><i class="fas fa-sync"></i></button>
+                                                <a href="/ozon-list/update-data/{{$order['id']}}"><button type="button" class="btn btn-block btn-primary"><i class="fas fa-sync"></i></button></a>
                                             </td>
                                         </tr>
                                     @endforeach
@@ -342,6 +346,30 @@
             }
         }
 
+        function updateOrders()
+        {
+            let idArr = []
+            $('.order-checkbox:checked').each(function () {
+                idArr.push($(this).attr('data-item'))
+            })
+            if(idArr.length > 0) {
+
+                let path = '/site/updateOrder?';
+                for(let i = 0; i < idArr.length; i++)
+                {
+                    if(i == 0)
+                    {
+                        path += 'orders[]='+idArr[i]
+                    }else {
+                        path += '&orders[]='+idArr[i]
+                    }
+                }
+                window.location.href = path
+            } else {
+                alert('Выберите хотя бы один чекбокс!')
+            }
+        }
+
         $('#download-label, #download-label1').click(function () {
             downloadLabel()
         })
@@ -351,6 +379,10 @@
             $('.order-checkbox').each(function () {
                 $(this).prop('checked', false)
             })
+        })
+
+        $('#send-ks1, #send-ks').click(function () {
+            updateOrders()
         })
     </script>
 @endsection

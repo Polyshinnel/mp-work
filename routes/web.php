@@ -7,6 +7,7 @@ use App\Http\Controllers\Ozon\GetOzonLabelPage;
 use App\Http\Controllers\Ozon\OzonLabelController;
 use App\Http\Controllers\Ozon\OzonPageController;
 use App\Http\Controllers\Ozon\TestController;
+use App\Http\Controllers\Ozon\UpdateOzonSiteStatusController;
 use App\Http\Controllers\Payment\GetPayments;
 use App\Http\Controllers\Payment\PaymentController;
 use App\Http\Controllers\Returning\GetReturning;
@@ -97,4 +98,7 @@ Route::middleware([LoggedUser::class])->group(function () {
 Route::middleware([LoggedUser::class])->group(function () {
     Route::post('/ozon-list/test', TestController::class);
     Route::get('/ozon-list/test-api', [AddNewOzonOrders::class, 'getSimplaOrderProcessing']);
+    Route::get('/ozon-list/update-data', UpdateOzonSiteStatusController::class);
+    Route::get('/ozon-list/update-data/{id}', [UpdateOzonSiteStatusController::class, 'update']);
+    Route::get('/site/updateOrder', [UpdateOzonSiteStatusController::class, 'updateStatus']);
 });
