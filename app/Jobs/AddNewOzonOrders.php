@@ -54,12 +54,17 @@ class AddNewOzonOrders
         if($ozonOrders){
             foreach ($ozonOrders as $order) {
                 $simplaInfo = $this->simplaOrderController->getOrder($order['ozon_posting_id']);
+
                 if($simplaInfo) {
-                    $order['site_order_id'] = $simplaInfo['order_id'];
-                    $order['site_status_id'] = $simplaInfo['status'];
-                    $order['db_name'] = $simplaInfo['database_name'];
-                    $order['site_label_id'] = $simplaInfo['labels']['label_id'];
-                    $simplaResult[] = $order;
+                    if(isset($simplaInfo['labels']))
+                    {
+                        $order['site_order_id'] = $simplaInfo['order_id'];
+                        $order['site_status_id'] = $simplaInfo['status'];
+                        $order['db_name'] = $simplaInfo['database_name'];
+                        $order['site_label_id'] = $simplaInfo['labels']['label_id'];
+                        $simplaResult[] = $order;
+                    }
+
                 }
             }
         }
