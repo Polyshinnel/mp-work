@@ -34,11 +34,11 @@
                                 </div>
 
                                 <div class="filter-block-unit__item">
-                                    <a href="/ozon-list/update-data"><button type="button" class="btn btn-block btn-primary">Обновить данные</button></a>
+                                    <button type="button" class="btn btn-block btn-primary" id="update-site-data" data-toggle="modal" data-target="#modal-default">Обновить данные</button>
                                 </div>
 
                                 <div class="filter-block-unit__item">
-                                    <a href="/ozon-list/synchronize"><button type="button" class="btn btn-block btn-primary">Заказы с Озон</button></a>
+                                    <button type="button" class="btn btn-block btn-primary" id="update-ozon-orders" data-toggle="modal" data-target="#modal-default">Заказы с Озон</button>
                                 </div>
                             </div>
 
@@ -204,6 +204,29 @@
             <!-- /.card -->
         </div>
     </div>
+
+    <div class="modal fade" id="modal-default">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Идет обновление</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="modal-body__wrapper" style="display: flex; flex-direction: column; align-items: center;">
+                        <img src="/assets/img/loading.gif" alt="" style="width: 130px;">
+                        <p>Подождите, идет обновление, окно закроется автоматически</p>
+                    </div>
+
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+    <!-- /.modal -->
 
     <script src="/assets/plugins/datatables/jquery.dataTables.min.js"></script>
     <script src="/assets/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
@@ -388,5 +411,29 @@
         $('#send-ks1, #send-ks').click(function () {
             updateOrders()
         })
+
+        $('#update-ozon-orders').on('click', function () {
+            $.ajax({
+                url: '/ozon-list/synchronize',
+                method: 'get',
+                dataType: 'json',
+                success: function(data){
+                    window.location.reload()
+                }
+            });
+        })
+
+        $('#update-site-data').on('click', function () {
+            $.ajax({
+                url: '/ozon-list/update-data',
+                method: 'get',
+                dataType: 'json',
+                success: function(data){
+                    window.location.reload()
+                }
+            });
+        })
+
+
     </script>
 @endsection

@@ -18,6 +18,6 @@ class GetNewOzonOrder extends Controller
     public function __invoke()
     {
         $this->orderController->addOrderToOrderList();
-        return back();
+        return response()->json(['status' => 'ok']);
     }
 }

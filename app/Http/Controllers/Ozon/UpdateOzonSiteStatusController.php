@@ -39,7 +39,7 @@ class UpdateOzonSiteStatusController extends Controller
     public function __invoke()
     {
         $this->orderJob->updateSiteStatusArr();
-        return back();
+        return response()->json(['status' => 'ok']);
     }
 
     public function update(int $orderId)
