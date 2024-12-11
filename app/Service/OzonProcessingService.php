@@ -223,8 +223,11 @@ class OzonProcessingService
                     'ozon_status_id' => $ozonStatus->id
                 ];
                 $ozonPosting = $this->ozonRepository->getOzonOrderByPosting($order['posting_number']);
-                if($ozonPosting && $ozonPosting->ozon_status_id != $ozonStatus->id){
-                    $this->ozonRepository->updateOzonOrderByPostingId($order['posting_number'], $updateArr);
+                if($ozonPosting){
+                    if($ozonPosting->ozon_status_id != $ozonStatus->id)
+                    {
+                        $this->ozonRepository->updateOzonOrderByPostingId($order['posting_number'], $updateArr);
+                    }
                 }
             }
         }
