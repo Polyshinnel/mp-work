@@ -8,6 +8,7 @@ use App\Jobs\UpdateOzonOrders;
 use App\Models\OzonOrder;
 use App\Repostory\Ozon\OzonRepository;
 use App\Service\CommonSettingsService;
+use App\Service\OzonOrderService;
 use App\Service\OzonProcessingService;
 use Illuminate\Http\Request;
 
@@ -18,6 +19,8 @@ class UpdateOzonSiteStatusController extends Controller
     private OzonProcessingService $processingService;
     private CommonSettingsService $commonSettingsService;
     private SimplaOrderController $simplaOrderController;
+    private OzonOrderService $ozonOrderService;
+    private OzonRepository $ozonRepository;
 
     public function __construct(
         UpdateOzonOrders $orderJob,
@@ -25,7 +28,8 @@ class UpdateOzonSiteStatusController extends Controller
         OzonProcessingService $processingService,
         CommonSettingsService $commonSettingsService,
         SimplaOrderController $simplaOrderController,
-        OzonRepository $ozonRepository
+        OzonRepository $ozonRepository,
+        OzonOrderService $ozonOrderService
     )
     {
         $this->orderJob = $orderJob;
@@ -34,11 +38,37 @@ class UpdateOzonSiteStatusController extends Controller
         $this->commonSettingsService = $commonSettingsService;
         $this->simplaOrderController = $simplaOrderController;
         $this->ozonRepository = $ozonRepository;
+        $this->ozonOrderService = $ozonOrderService;
     }
 
     public function __invoke()
     {
-        $this->orderJob->updateSiteStatusArr();
+        $ozonOrders = $this->ozonRepository->getOzonWatchableOrderList([1, 2]);
+        $commonSettings = $this->commonSettingsService->getCommonSettingsAssociativeData();
+        $simplaResults = [];
+        if(!$ozonOrders->isEmpty()) {
+            $orderBlocks = $this->ozonOrderService->getOzonOrderListBlock($ozonOrders);
+            if($orderBlocks)
+            {
+                foreach ($orderBlocks as $orderList)
+                {
+                    $result = $this->simplaOrderController->getInternalOrderList($orderList);
+                    if($result){
+                        foreach ($result as $item)
+                        {
+                            $simplaResults[] = $item;
+                        }
+                    }
+                }
+            }
+        }
+        if($simplaResults){
+            foreach ($simplaResults as $result)
+            {
+                $this->processingService->updateOzonOrderSiteBySiteInfo($result['external_cs_id'], $result, $commonSettings);
+            }
+        }
+        $this->orderJob->updateOzonStatus();
         return response()->json(['status' => 'ok']);
     }
 

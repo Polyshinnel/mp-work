@@ -34,11 +34,11 @@
                                 </div>
 
                                 <div class="filter-block-unit__item">
-                                    <button type="button" class="btn btn-block btn-primary" id="update-site-data" data-toggle="modal" data-target="#modal-default">Обновить данные</button>
+                                    <button type="button" class="btn btn-block btn-primary" id="update-site-data" data-toggle="modal" data-target="#modal-default">Обновить статусы</button>
                                 </div>
 
                                 <div class="filter-block-unit__item">
-                                    <button type="button" class="btn btn-block btn-primary" id="update-ozon-orders" data-toggle="modal" data-target="#modal-default">Заказы с Озон</button>
+                                    <button type="button" class="btn btn-block btn-primary" id="update-ozon-orders" data-toggle="modal" data-target="#modal-default">Новые заказы</button>
                                 </div>
                             </div>
 
