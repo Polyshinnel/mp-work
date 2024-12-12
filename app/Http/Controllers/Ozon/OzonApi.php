@@ -52,6 +52,20 @@ class OzonApi extends Controller
         return $this->getPostJsonRequest($url, $this->headers, json_encode($jsonArr));
     }
 
+    public function getLabelsTask(array $postings): bool|string
+    {
+        $postingsArr = ['posting_number' => $postings];
+        $url = 'https://api-seller.ozon.ru/v2/posting/fbs/package-label/create';
+        return $this->getPostJsonRequest($url, $this->headers, json_encode($postingsArr));
+    }
+
+    public function getLabels(string $taskId): bool|string
+    {
+        $postingsArr = ['task_id' => $taskId];
+        $url = 'https://api-seller.ozon.ru/v1/posting/fbs/package-label/get';
+        return $this->getPostJsonRequest($url, $this->headers, json_encode($postingsArr));
+    }
+
     private function getPostJsonRequest($url,$headers, $json): bool|string
     {
         $ch = curl_init($url);

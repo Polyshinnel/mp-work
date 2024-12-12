@@ -43,7 +43,7 @@ class UpdateOzonOrders
         $formattedPostings = [];
         $currentDate= new DateTime();
         $today = $currentDate->format('Y-m-d');
-        $currentDate->modify('-1 day');
+        $currentDate->modify('-5 day');
         $yesterday = $currentDate->format('Y-m-d');
         $dateStart = sprintf('%sT%s.000Z', $yesterday, '00:00:00');
         //$dateStart = '2024-11-30T00:00:00.000Z';
