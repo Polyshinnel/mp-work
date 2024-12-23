@@ -29,12 +29,58 @@
                 </li>
 
                 <li class="nav-item">
-                    <a href="/ozon-list" class="nav-link">
-                        <i class="nav-icon fas fa-credit-card"></i>
+                    <a href="#" class="nav-link">
+
+                        <i class="nav-icon fas fa-tags"></i>
                         <p>
                             Озон
+                            <i class="right fas fa-angle-left"></i>
                         </p>
                     </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a href="/ozon-list" class="nav-link">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Заказы</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/ozon-returnings" class="nav-link">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Возвраты</p>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+
+                <li class="nav-item">
+                    <a href="#" class="nav-link">
+                        <i class="nav-icon fas fa-space-shuttle"></i>
+                        <p>
+                            Wildberries
+                            <i class="right fas fa-angle-left"></i>
+                        </p>
+                    </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a href="/wb-list" class="nav-link">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Заказы</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/wb-returnings" class="nav-link">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Возвраты</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/wb-products" class="nav-link">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Товары</p>
+                            </a>
+                        </li>
+                    </ul>
                 </li>
 
                 <li class="nav-item">

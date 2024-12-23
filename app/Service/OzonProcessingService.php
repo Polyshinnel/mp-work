@@ -86,7 +86,7 @@ class OzonProcessingService
                 }
 
                 if(empty($err)){
-                    $processedResult[$order['ozon_order_id']] = [
+                    $processedResult[$order['ozon_posting_id']] = [
                         'site_status_id' => $siteStatusId,
                         'site_label_id' => $siteLabelId,
                         'ozon_status_id' => $ozonStatusId,
