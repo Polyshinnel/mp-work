@@ -33,7 +33,7 @@ class AddNewOzonOrders
         date_default_timezone_set('Europe/Moscow');
         $currentDate= new DateTime();
         $today = $currentDate->format('Y-m-d');
-        $currentDate->modify('-1 day');
+        $currentDate->modify('-2 day');
         $yesterday = $currentDate->format('Y-m-d');
         $dateStart = sprintf('%sT%s.000Z', $yesterday, '00:00:00');
         //$dateStart = '2024-11-25T00:00:00.000Z';
