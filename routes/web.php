@@ -11,6 +11,8 @@ use App\Http\Controllers\Ozon\TestController;
 use App\Http\Controllers\Ozon\UpdateOzonSiteStatusController;
 use App\Http\Controllers\Payment\GetPayments;
 use App\Http\Controllers\Payment\PaymentController;
+use App\Http\Controllers\Print\PrintController;
+use App\Http\Controllers\Print\PrintJobController;
 use App\Http\Controllers\Returning\GetReturning;
 use App\Http\Controllers\Returning\ReturningController;
 use App\Http\Controllers\Settings\CommonSettings\CommonSettingsPage;
@@ -104,3 +106,6 @@ Route::middleware([LoggedUser::class])->group(function () {
     Route::get('/site/updateOrder', [UpdateOzonSiteStatusController::class, 'updateStatus']);
     Route::get('/ozon-list/synchronize', GetNewOzonOrder::class);
 });
+
+Route::get('/print/get-labels/{seat_id}', PrintController::class);
+Route::post('/print/add-jobs', PrintJobController::class);

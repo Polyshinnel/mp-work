@@ -33,7 +33,7 @@ class AddNewOzonOrders
         date_default_timezone_set('Europe/Moscow');
         $currentDate= new DateTime();
         $today = $currentDate->format('Y-m-d');
-        $currentDate->modify('-1 day');
+        $currentDate->modify('-3 day');
         $yesterday = $currentDate->format('Y-m-d');
         $dateStart = sprintf('%sT%s.000Z', $yesterday, '00:00:00');
         //$dateStart = '2024-11-25T00:00:00.000Z';
@@ -51,6 +51,7 @@ class AddNewOzonOrders
     public function getSimplaOrderProcessing($ozonOrders): array
     {
         $simplaResult = [];
+
         if($ozonOrders){
             foreach ($ozonOrders as $order) {
                 $simplaInfo = $this->simplaOrderController->getOrder($order['ozon_posting_id']);
