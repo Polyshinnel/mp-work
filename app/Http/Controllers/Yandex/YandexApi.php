@@ -17,7 +17,7 @@ class YandexApi extends Controller
         {
             $fileName = time().'.pdf';
             $info = Storage::disk('yandex_labels')->put($fileName, $data);
-            return '/public/yandex-labels/'.$fileName;
+            return 'yandex-labels/'.$fileName;
         }
         return false;
     }

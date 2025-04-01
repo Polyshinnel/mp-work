@@ -97,7 +97,7 @@ class GetLabelController extends Controller
             $fileName = time().'.pdf';
             $fileContent = file_get_contents($url);
             Storage::disk('labels')->put($fileName, $fileContent);
-            return '/public/ozon-labels/'.$fileName;
+            return 'ozon-labels/'.$fileName;
         }
         return null;
     }
