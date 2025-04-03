@@ -9,7 +9,7 @@ class OzonApi extends Controller
 {
     private array $headers;
 
-    public function __construct()
+    public function __construct(bool $ip = null)
     {
         $clientId = sprintf('Client-Id: %s', config('ozon.ozon_client_id'));
         $apiKey = sprintf('Api-Key: %s', config('ozon.ozon_api_key'));
@@ -52,15 +52,37 @@ class OzonApi extends Controller
         return $this->getPostJsonRequest($url, $this->headers, json_encode($jsonArr));
     }
 
-    public function getLabelsTask(array $postings): bool|string
+    public function getLabelsTask(array $postings, bool $ozonIp = false): bool|string
     {
+        if($ozonIp)
+        {
+            $clientId = sprintf('Client-Id: %s', config('ozon.ozon_ip_client_id'));
+            $apiKey = sprintf('Api-Key: %s', config('ozon.ozon_ip_api_key'));
+
+            $this->headers = [
+                'Content-Type: application/json',
+                $clientId,
+                $apiKey
+            ];
+        }
         $postingsArr = ['posting_number' => $postings];
         $url = 'https://api-seller.ozon.ru/v2/posting/fbs/package-label/create';
         return $this->getPostJsonRequest($url, $this->headers, json_encode($postingsArr));
     }
 
-    public function getLabels(string $taskId): bool|string
+    public function getLabels(string $taskId, bool $ozonIp = false): bool|string
     {
+        if($ozonIp)
+        {
+            $clientId = sprintf('Client-Id: %s', config('ozon.ozon_ip_client_id'));
+            $apiKey = sprintf('Api-Key: %s', config('ozon.ozon_ip_api_key'));
+
+            $this->headers = [
+                'Content-Type: application/json',
+                $clientId,
+                $apiKey
+            ];
+        }
         $postingsArr = ['task_id' => $taskId];
         $url = 'https://api-seller.ozon.ru/v1/posting/fbs/package-label/get';
         return $this->getPostJsonRequest($url, $this->headers, json_encode($postingsArr));

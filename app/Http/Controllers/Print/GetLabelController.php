@@ -28,6 +28,11 @@ class GetLabelController extends Controller
         if($data['type_label'] === 'ozon') {
             $file = $this->getOzonLabel($data['order_id']);
         }
+
+        if($data['type_label'] === 'ozon_ip') {
+            $file = $this->getOzonLabel($data['order_id'], true);
+        }
+
         if($data['type_label'] === 'yandex') {
             $file = $this->getYandexLabel($data['campaign_id'], $data['order_id']);
         }
@@ -42,12 +47,12 @@ class GetLabelController extends Controller
         return response()->json(['status' => 'fail'], 500);
     }
 
-    private function getOzonLabel($postingId)
+    private function getOzonLabel($postingId, $ozonIp = false)
     {
         $postingArr = [
             $postingId
         ];
-        $resultTask = $this->ozonApi->getLabelsTask($postingArr);
+        $resultTask = $this->ozonApi->getLabelsTask($postingArr, $ozonIp);
         $taskId = NULL;
         $url = NULL;
 
@@ -68,7 +73,7 @@ class GetLabelController extends Controller
 
 
         if($taskId) {
-            $resultLabel = $this->ozonApi->getLabels($taskId);
+            $resultLabel = $this->ozonApi->getLabels($taskId, $ozonIp);
             if ($resultLabel) {
                 $resultLabel = json_decode($resultLabel, true);
                 if (isset($resultLabel['result']['status'])) {
