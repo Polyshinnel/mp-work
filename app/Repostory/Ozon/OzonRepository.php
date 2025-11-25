@@ -6,6 +6,7 @@ use App\Models\OzonOrder;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Str;
 
 class OzonRepository
 {
@@ -43,14 +44,39 @@ class OzonRepository
         }
 
         if ($search !== null && $search !== '') {
-            $query->where(function ($q) use ($search) {
-                $q->where('ozon_posting_id', 'like', "%{$search}%");
+            $search = trim($search);
+            $numericSearch = preg_replace('/\D+/', '', $search);
+            $startsWithLetter = preg_match('/^[\p{L}]/u', $search) === 1;
 
-                $numericSearch = preg_replace('/\D+/', '', $search);
-                if ($numericSearch !== '') {
-                    $q->orWhereRaw('CAST(site_order_id AS CHAR) LIKE ?', ["%{$numericSearch}%"]);
+            if ($startsWithLetter) {
+                $prefix = null;
+                $orderDigits = null;
+
+                if (preg_match('/^([\p{L}]+)[^\d]*(\d+)?$/u', $search, $matches)) {
+                    $prefix = Str::lower($matches[1]);
+                    $orderDigits = $matches[2] ?? null;
                 }
-            });
+
+                if ($prefix !== null) {
+                    $query->whereHas('siteInfo', function ($q) use ($prefix) {
+                        $q->whereRaw('LOWER(prefix) = ?', [$prefix]);
+                    });
+                }
+
+                if ($orderDigits !== null) {
+                    $query->where(function ($q) use ($orderDigits) {
+                        $q->whereRaw('CAST(site_order_id AS CHAR) LIKE ?', ["%{$orderDigits}%"]);
+                    });
+                }
+            } else {
+                $query->where(function ($q) use ($search, $numericSearch) {
+                    $q->where('ozon_posting_id', 'like', "%{$search}%");
+
+                    if ($numericSearch !== '') {
+                        $q->orWhereRaw('CAST(site_order_id AS CHAR) LIKE ?', ["%{$numericSearch}%"]);
+                    }
+                });
+            }
         }
 
         return $query->paginate($perPage);
