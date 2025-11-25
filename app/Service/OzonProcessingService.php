@@ -17,18 +17,21 @@ class OzonProcessingService
     private OzonSettingsRepository $ozonSettingsRepository;
     private CommonSettingsService $commonSettingsService;
     private OzonSettingsService $ozonSettingsService;
+    private OzonProductService $ozonProductService;
 
     public function __construct(
         OzonRepository $ozonRepository,
         OzonSettingsRepository $ozonSettingsRepository,
         CommonSettingsService $commonSettingsService,
-        OzonSettingsService $ozonSettingsService
+        OzonSettingsService $ozonSettingsService,
+        OzonProductService $ozonProductService
     )
     {
         $this->ozonRepository = $ozonRepository;
         $this->ozonSettingsRepository = $ozonSettingsRepository;
         $this->commonSettingsService = $commonSettingsService;
         $this->ozonSettingsService = $ozonSettingsService;
+        $this->ozonProductService = $ozonProductService;
     }
 
     public function getOzonPackingsByPeriod(OzonApi $api, array $warehouses, array $statuses, string $dateStart, string $dateEnd): array
@@ -56,6 +59,7 @@ class OzonProcessingService
 
                 $dateSec = strtotime($order['date_create']) + 1080;
                 $dateCreate = date('Y-m-d H:i:s', $dateSec);
+                $products = [];
 
 
                 if(isset($ozonSettings['warehouses'][$order['ozon_warehouse_id']])) {
@@ -85,6 +89,13 @@ class OzonProcessingService
                     $err[$order['ozon_posting_id']][] = sprintf('Не могу найти статус сайта: %s', $order['site_status_id']);
                 }
 
+                if(isset($order['products']))
+                {
+                    $products = $order['products'];
+                }else {
+                    $err[$order['ozon_posting_id']][] = 'Не могу найти продукты';
+                }
+
                 if(empty($err)){
                     $processedResult[$order['ozon_posting_id']] = [
                         'site_status_id' => $siteStatusId,
@@ -96,7 +107,8 @@ class OzonProcessingService
                         'ozon_posting_id' => $order['ozon_posting_id'],
                         'products_count' => $order['product_count'],
                         'site_order_id' => $order['site_order_id'],
-                        'date_order_create' => $dateCreate
+                        'date_order_create' => $dateCreate,
+                        'products' => $products,
                     ];
                 } else {
                     print_r($err);
@@ -115,7 +127,10 @@ class OzonProcessingService
             {
                 try {
                     DB::beginTransaction();
-                    $this->ozonRepository->createOzonOrder($order);
+                    $products = $order['products'];
+                    unset($order['products']);
+                    $ozonOrder = $this->ozonRepository->createOzonOrder($order);
+                    $this->ozonProductService->addProductsToOrder($ozonOrder, $products);
                     DB::commit();
                 } catch (\Exception $exception)
                 {
@@ -165,11 +180,18 @@ class OzonProcessingService
                     foreach($statusOrderArr as $ozonStatus => $orderArr){
                         foreach ($orderArr as $order) {
                             $productCount = 0;
+                            $productList = [];
                             if($order['products']) {
                                 foreach($order['products'] as $product){
                                     $productCount += $product['quantity'];
+                                    $productList[] = [
+                                        'offer_id' => $product['offer_id'],
+                                        'quantity' => $product['quantity'],
+                                        'name' => $product['name'],
+                                    ];
                                 }
                             }
+
                             $processedOrders[] = [
                                 'ozon_warehouse_id' => $warehouseOzonId,
                                 'ozon_status' => $ozonStatus,
@@ -177,6 +199,7 @@ class OzonProcessingService
                                 'ozon_order_id' => $order['order_id'],
                                 'date_create' => $order['in_process_at'],
                                 'product_count' => $productCount,
+                                'products' => $productList,
                             ];
                         }
 

@@ -10,9 +10,9 @@ use Illuminate\Support\Str;
 
 class OzonRepository
 {
-    public function createOzonOrder(array $createArr): void
+    public function createOzonOrder(array $createArr): OzonOrder
     {
-        OzonOrder::create($createArr);
+        return OzonOrder::create($createArr);
     }
 
     public function updateOzonOrder(array $updateArr, int $ozonOrderId): void

@@ -88,6 +88,42 @@ class OzonApi extends Controller
         return $this->getPostJsonRequest($url, $this->headers, json_encode($postingsArr));
     }
 
+    public function getFilteredProducts($offerId)
+    {
+        $url = 'https://api-seller.ozon.ru/v3/product/list';
+
+        $filter = [
+            "filter" => [
+                "offer_id" => [
+                    $offerId
+                ]
+            ],
+            "limit" => 1
+        ];
+        return $this->getPostJsonRequest($url, $this->headers, json_encode($filter));
+    }
+
+    public function orderMarkAsShipped(string $postingNumber, string $productId, int $quantity)
+    {
+        $url = 'https://api-seller.ozon.ru/v4/posting/fbs/ship';
+        $jsonArr = [
+            [
+                'packages' => [
+                    [
+                        'products' => [
+                            'product_id' => $productId,
+                            'quantity' => $quantity
+                        ]
+                    ]
+                ],
+                'posting_number' => $postingNumber
+            ]
+        ];
+        return $this->getPostJsonRequest($url, $this->headers, json_encode($jsonArr));
+    }
+
+
+
     private function getPostJsonRequest($url,$headers, $json): bool|string
     {
         $ch = curl_init($url);
