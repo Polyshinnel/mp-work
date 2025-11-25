@@ -4,7 +4,10 @@
 @section('block_title', $pageInfo['block_title'])
 
 @section('content')
-    @php($selectedFilters = $selectedFilters ?? [])
+    @php
+        $selectedFilters = $selectedFilters ?? [];
+        $firstOrder = $order_info ? $order_info->first() : null;
+    @endphp
     <div class="col-12">
         <div class="card card-primary card-outline card-outline-tabs">
             <div class="card-header p-0 border-bottom-0">
@@ -102,8 +105,6 @@
                         @php
                             $firstOrder = $order_info->first();
                         @endphp
-
-
                         @if($firstOrder && $firstOrder['has_btn'])
                                 <div class="row">
                                     <div class="col-md-6">
