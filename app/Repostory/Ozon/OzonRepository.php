@@ -3,6 +3,8 @@
 namespace App\Repostory\Ozon;
 
 use App\Models\OzonOrder;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 
 class OzonRepository
@@ -30,6 +32,28 @@ class OzonRepository
     public function getFilteredOzonOrders(array $filter): ?Collection
     {
         return OzonOrder::where($filter)->get();
+    }
+
+    public function getPaginatedOrders(array $filter, int $perPage = 20): LengthAwarePaginator
+    {
+        $query = $this->buildBaseOrderQuery();
+
+        if ($filter) {
+            $query->where($filter);
+        }
+
+        return $query->paginate($perPage)->withQueryString();
+    }
+
+    private function buildBaseOrderQuery(): Builder
+    {
+        return OzonOrder::with([
+            'siteLabel',
+            'siteStatus',
+            'ozonWarehouse',
+            'siteInfo',
+            'ozonStatus',
+        ])->orderByDesc('id');
     }
 
     public function getAllOrders(): ?Collection

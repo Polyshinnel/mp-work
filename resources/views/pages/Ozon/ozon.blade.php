@@ -4,6 +4,7 @@
 @section('block_title', $pageInfo['block_title'])
 
 @section('content')
+    @php($selectedFilters = $selectedFilters ?? [])
     <div class="col-12">
         <div class="card card-primary card-outline card-outline-tabs">
             <div class="card-header p-0 border-bottom-0">
@@ -47,10 +48,10 @@
                                     <div class="form-group">
                                         <label for="site_status">Статус на сайте</label>
                                         <select class="form-control" name="site_status" id="site_status">
-                                            <option value="0">Не выбрано</option>
+                                            <option value="0" @selected(!isset($selectedFilters['site_status']))>Не выбрано</option>
                                             @if($filters['site_status'])
                                                 @foreach($filters['site_status'] as $filter)
-                                                    <option value="{{$filter['id']}}">{{$filter['name']}}</option>
+                                                    <option value="{{$filter['id']}}" @selected(($selectedFilters['site_status'] ?? null) == $filter['id'])>{{$filter['name']}}</option>
                                                 @endforeach
                                             @endif
                                         </select>
@@ -61,10 +62,10 @@
                                     <div class="form-group">
                                         <label for="warehouse_mark">Метка склада</label>
                                         <select class="form-control" name="warehouse_mark" id="warehouse_mark">
-                                            <option value="0">Не выбрано</option>
+                                            <option value="0" @selected(!isset($selectedFilters['label']))>Не выбрано</option>
                                             @if($filters['site_label'])
                                                 @foreach($filters['site_label'] as $filter)
-                                                    <option value="{{$filter['id']}}">{{$filter['name']}}</option>
+                                                    <option value="{{$filter['id']}}" @selected(($selectedFilters['label'] ?? null) == $filter['id'])>{{$filter['name']}}</option>
                                                 @endforeach
                                             @endif
                                         </select>
@@ -75,10 +76,10 @@
                                     <div class="form-group">
                                         <label for="warehouse">Склад</label>
                                         <select class="form-control" name="warehouse" id="warehouse">
-                                            <option value="0">Не выбрано</option>
+                                            <option value="0" @selected(!isset($selectedFilters['warehouse']))>Не выбрано</option>
                                             @if($filters['warehouse'])
                                                 @foreach($filters['warehouse'] as $filter)
-                                                    <option value="{{$filter['id']}}">{{$filter['name']}}</option>
+                                                    <option value="{{$filter['id']}}" @selected(($selectedFilters['warehouse'] ?? null) == $filter['id'])>{{$filter['name']}}</option>
                                                 @endforeach
                                             @endif
                                         </select>
@@ -98,10 +99,12 @@
 
                         </div>
 
+                        @php
+                            $firstOrder = $order_info->first();
+                        @endphp
 
 
-                        @if($order_info)
-                            @if($order_info[0]['has_btn'])
+                        @if($firstOrder && $firstOrder['has_btn'])
                                 <div class="row">
                                     <div class="col-md-6">
                                         <div class="download-labels-btn download-labels-btn-top">
@@ -114,8 +117,6 @@
                                         </div>
                                     </div>
                                 </div>
-
-                            @endif
                         @endif
 
                         <table id="order-table" class="table table-bordered table-striped" >
@@ -135,8 +136,7 @@
                             </tr>
                             </thead>
                             <tbody>
-                                @if($order_info)
-                                    @foreach($order_info as $order)
+                                @forelse($order_info as $order)
                                         <tr style="text-align: center">
                                             <td><input type="checkbox" name="" id="" class="order-checkbox" data-item="{{$order['id']}}"></td>
                                             <td>{{$order['id']}}</td>
@@ -174,17 +174,24 @@
                                                 <a href="/ozon-list/update-data/{{$order['id']}}"><button type="button" class="btn btn-block btn-primary"><i class="fas fa-sync"></i></button></a>
                                             </td>
                                         </tr>
-                                    @endforeach
-                                @endif
+                                @empty
+                                    <tr>
+                                        <td colspan="11" style="text-align: center">Нет данных для отображения</td>
+                                    </tr>
+                                @endforelse
                             </tbody>
                         </table>
 
+                        @if($order_info->hasPages())
+                            <div id="dataTables-server-pagination" class="d-none">
+                                {{ $order_info->appends(request()->query())->links('pagination::bootstrap-4') }}
+                            </div>
+                        @endif
 
                     </div>
                 </div>
 
-                @if($order_info)
-                    @if($order_info[0]['has_btn'])
+                @if($firstOrder && $firstOrder['has_btn'])
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="download-labels-btn download-labels-btn-top">
@@ -197,8 +204,6 @@
                                 </div>
                             </div>
                         </div>
-
-                    @endif
                 @endif
             </div>
             <!-- /.card -->
@@ -244,9 +249,10 @@
     <script>
         let table = $('#order-table').DataTable({
             order: [[0, 'desc']],
-            pageLength: 20,
+            pageLength: {{$order_info->perPage()}},
             lengthChange: false,
-            iDisplayLength: -1,
+            paging: true,
+            info: false,
             columnDefs: [ {
                 targets: 0,
                 orderable: false
@@ -261,7 +267,42 @@
             }
         });
 
-        let selector = $('#order-table_wrapper').find('.row .col-sm-12').first()
+        const serverPaginationWrapper = $('#dataTables-server-pagination');
+
+        const injectServerPagination = () => {
+            if(!serverPaginationWrapper.length) {
+                return;
+            }
+
+            const paginationHtml = serverPaginationWrapper.html();
+
+            if(!paginationHtml || !paginationHtml.trim().length) {
+                return;
+            }
+
+            const paginateContainer = $('#order-table_wrapper').find('.dataTables_paginate');
+            if(!paginateContainer.length) {
+                return;
+            }
+            paginateContainer.html(paginationHtml);
+        };
+
+        injectServerPagination();
+        table.on('draw', injectServerPagination);
+
+        $('#order-table_wrapper').on('click', '.pagination a', function (e) {
+            const target = $(this).attr('href');
+            if(!target || target === '#') {
+                e.preventDefault();
+                return;
+            }
+
+            e.preventDefault();
+            $('.all-checkbox').prop('checked', false);
+            $('.order-checkbox').prop('checked', false);
+            window.location.href = target;
+        });
+
         $('#search-input').on('keyup', function () {
             table.search(this.value).draw();
         });
@@ -269,44 +310,7 @@
 
     <script>
         $(document).ready(function () {
-            let queryParameters = window.location.search
-            if(queryParameters.length > 0) {
-                queryParameters = queryParameters.substring(1);
-                let parametersArr = queryParameters.split('&')
-                if(parametersArr.length > 0)
-                {
-                    let paramObj = {}
-                    for(let i = 0; i < parametersArr.length; i++) {
-                        let query = parametersArr[i].split('=')
-                        paramObj[query[0]] = query[1]
-                    }
-
-                    let keys = Object.keys(paramObj)
-                    for(let i = 0; i < keys.length; i++)
-                    {
-                        if(keys[i] == 'status')
-                        {
-                            let siteStatus = $('#site_status').val(paramObj[keys[i]])
-
-                        }
-
-                        if(keys[i] == 'label')
-                        {
-                            let siteLabel = $('#warehouse_mark').val(paramObj[keys[i]])
-
-                        }
-
-                        if(keys[i] == 'warehouse')
-                        {
-                            let warehouse = $('#warehouse').val(paramObj[keys[i]])
-                        }
-                    }
-                }
-            }
-        })
-
-
-        $('#filter-data').click(function (){
+            $('#filter-data').click(function (){
             let siteStatus = $('#site_status').val()
             let siteLabel = $('#warehouse_mark').val()
             let warehouse = $('#warehouse').val()
@@ -401,13 +405,6 @@
             downloadLabel()
         })
 
-        $('.paginate_button').click(function () {
-            $('.all-checkbox').prop('checked', false)
-            $('.order-checkbox').each(function () {
-                $(this).prop('checked', false)
-            })
-        })
-
         $('#send-ks1, #send-ks').click(function () {
             updateOrders()
         })
@@ -435,5 +432,6 @@
         })
 
 
+        })
     </script>
 @endsection

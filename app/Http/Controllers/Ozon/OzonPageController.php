@@ -14,6 +14,8 @@ use Illuminate\Http\Request;
 
 class OzonPageController extends BasePageController
 {
+    private const ORDERS_PER_PAGE = 20;
+
     private OzonOrderService $ozonOrderService;
     private CommonSettingsRepository $commonSettingsRepository;
     private OzonSettingsRepository $ozonSettingsRepository;
@@ -39,7 +41,11 @@ class OzonPageController extends BasePageController
         $filters = $this->getFiltersOptions();
         $orderQueryFilters = $this->getFilters($request);
 
-        $ozonOrders = $this->ozonOrderService->getOzonFilteredOrder($orderStatus, $orderQueryFilters);
+        $ozonOrders = $this->ozonOrderService->getOzonFilteredOrder(
+            $orderStatus,
+            $orderQueryFilters,
+            self::ORDERS_PER_PAGE
+        );
         $formattedOrder = $this->ozonOrderService->getOzonOrderList($ozonOrders);
 
 
@@ -50,7 +56,8 @@ class OzonPageController extends BasePageController
                 'link' => '/ozon',
                 'order_info' => $formattedOrder,
                 'tabList' => $tabList,
-                'filters' => $filters
+                'filters' => $filters,
+                'selectedFilters' => $orderQueryFilters
             ]
         );
     }

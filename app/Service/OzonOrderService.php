@@ -4,7 +4,7 @@ namespace App\Service;
 
 use App\Http\Controllers\Utils\TimeController;
 use App\Repostory\Ozon\OzonRepository;
-use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
 class OzonOrderService
 {
@@ -16,45 +16,37 @@ class OzonOrderService
         $this->timeController = $timeController;
     }
 
-    public function getOzonFilteredOrder(int $statusId, array $queryFilter): ?Collection
+    public function getOzonFilteredOrder(int $statusId, array $queryFilter, int $perPage = 20): LengthAwarePaginator
     {
         $filter = [];
 
-        if($statusId != 0) {
-            $filter[] = [
-                'ozon_status_id', '=', $statusId
-            ];
+        if ($statusId !== 0) {
+            $filter['ozon_status_id'] = $statusId;
         }
-        if(isset($queryFilter['site_status']))
-        {
-            $filter[] = [
-                'site_status_id', '=', $queryFilter['site_status']
-            ];
+
+        if (isset($queryFilter['site_status'])) {
+            $filter['site_status_id'] = $queryFilter['site_status'];
         }
-        if(isset($queryFilter['label']))
-        {
-            $filter[] = [
-                'site_label_id', '=', $queryFilter['label']
-            ];
+
+        if (isset($queryFilter['label'])) {
+            $filter['site_label_id'] = $queryFilter['label'];
         }
-        if(isset($queryFilter['warehouse']))
-        {
-            $filter[] = [
-                'ozon_warehouse_id', '=', $queryFilter['warehouse']
-            ];
+
+        if (isset($queryFilter['warehouse'])) {
+            $filter['ozon_warehouse_id'] = $queryFilter['warehouse'];
         }
-        if($filter){
-            return $ozonOrder = $this->ozonRepository->getFilteredOzonOrders($filter);
-        } else {
-            return $this->ozonRepository->getAllOrders();
-        }
+
+        return $this->ozonRepository->getPaginatedOrders($filter, $perPage);
     }
 
-    public function getOzonOrderList(Collection $orders): array
+    public function getOzonOrderList(LengthAwarePaginator $orders): LengthAwarePaginator
     {
-        $result = [];
-        if(!$orders->isEmpty()){
-            foreach ($orders as $order) {
+        if($orders->count() === 0){
+            return $orders;
+        }
+
+        $orders->setCollection(
+            $orders->getCollection()->transform(function ($order) {
                 $labelInfo = $order->siteLabel;
                 $siteStatus = $order->siteStatus;
                 $ozonWarehouse = $order->ozonWarehouse;
@@ -70,14 +62,9 @@ class OzonOrderService
                     $order->ozon_posting_id
                 );
 
-                $hasBtn = false;
+                $hasBtn = $order->ozon_status_id == '2';
 
-                if($order->ozon_status_id == '2')
-                {
-                    $hasBtn = true;
-                }
-
-                $result[] = [
+                return [
                     'id' => $order->id,
                     'date' => $date,
                     'site_link' => $siteLink,
@@ -91,9 +78,10 @@ class OzonOrderService
                     'warehouse_name' => $ozonWarehouse->name,
                     'has_btn' => $hasBtn
                 ];
-            }
-        }
-        return $result;
+            })
+        );
+
+        return $orders;
     }
 
     public function getOzonOrderListBlock($orders): array
