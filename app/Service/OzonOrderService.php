@@ -36,7 +36,9 @@ class OzonOrderService
             $filter['ozon_warehouse_id'] = $queryFilter['warehouse'];
         }
 
-        return $this->ozonRepository->getPaginatedOrders($filter, $perPage);
+        $searchQuery = $queryFilter['search'] ?? null;
+
+        return $this->ozonRepository->getPaginatedOrders($filter, $perPage, $searchQuery);
     }
 
     public function getOzonOrderList(LengthAwarePaginator $orders): LengthAwarePaginator

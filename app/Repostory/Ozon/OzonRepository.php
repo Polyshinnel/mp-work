@@ -34,15 +34,26 @@ class OzonRepository
         return OzonOrder::where($filter)->get();
     }
 
-    public function getPaginatedOrders(array $filter, int $perPage = 20): LengthAwarePaginator
+    public function getPaginatedOrders(array $filter, int $perPage = 20, ?string $search = null): LengthAwarePaginator
     {
         $query = $this->buildBaseOrderQuery();
 
-        if ($filter) {
-            $query->where($filter);
+        foreach ($filter as $column => $value) {
+            $query->where($column, $value);
         }
 
-        return $query->paginate($perPage)->withQueryString();
+        if ($search !== null && $search !== '') {
+            $query->where(function ($q) use ($search) {
+                $q->where('ozon_posting_id', 'like', "%{$search}%");
+
+                $numericSearch = preg_replace('/\D+/', '', $search);
+                if ($numericSearch !== '') {
+                    $q->orWhereRaw('CAST(site_order_id AS CHAR) LIKE ?', ["%{$numericSearch}%"]);
+                }
+            });
+        }
+
+        return $query->paginate($perPage);
     }
 
     private function buildBaseOrderQuery(): Builder

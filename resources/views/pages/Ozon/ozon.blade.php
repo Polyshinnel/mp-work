@@ -33,7 +33,7 @@
                                 <div class="filter-block-unit__item">
                                     <div class="form-group">
                                         <label for="search-input">Поиск</label>
-                                        <input type="text" class="form-control" id="search-input" name="search-input" placeholder="Поиск по таблице">
+                                        <input type="text" class="form-control" id="search-input" name="search-input" placeholder="Поиск по таблице" value="{{ $selectedFilters['search'] ?? '' }}">
                                     </div>
                                 </div>
 
@@ -254,6 +254,7 @@
             lengthChange: false,
             paging: true,
             info: false,
+            searching: false,
             columnDefs: [ {
                 targets: 0,
                 orderable: false
@@ -303,39 +304,47 @@
             $('.order-checkbox').prop('checked', false);
             window.location.href = target;
         });
-
-        $('#search-input').on('keyup', function () {
-            table.search(this.value).draw();
-        });
     </script>
 
     <script>
         $(document).ready(function () {
+            $('#search-input').on('keypress', function (e) {
+                if(e.which === 13) {
+                    e.preventDefault();
+                    $('#filter-data').click();
+                }
+            })
+
             $('#filter-data').click(function (){
-            let siteStatus = $('#site_status').val()
-            let siteLabel = $('#warehouse_mark').val()
-            let warehouse = $('#warehouse').val()
+                let siteStatus = $('#site_status').val()
+                let siteLabel = $('#warehouse_mark').val()
+                let warehouse = $('#warehouse').val()
+                let searchQuery = $('#search-input').val().trim()
 
-            let filter = {};
-            if(siteStatus != 0) {
-                filter.status = siteStatus
-            }
-            if(siteLabel != 0) {
-                filter.label = siteLabel
-            }
+                let filter = {};
+                if(siteStatus != 0) {
+                    filter.status = siteStatus
+                }
+                if(siteLabel != 0) {
+                    filter.label = siteLabel
+                }
 
-            if(warehouse != 0) {
-                filter.warehouse = warehouse
-            }
+                if(warehouse != 0) {
+                    filter.warehouse = warehouse
+                }
 
-            if(!jQuery.isEmptyObject(filter)){
-                let path = window.location.pathname;
-                let searchParam = new URLSearchParams(filter)
-                searchParam = searchParam.toString()
-                path = `${path}?${searchParam}`
-                window.location.href = path
-            }
-        })
+                if(searchQuery.length > 0) {
+                    filter.search = searchQuery
+                }
+
+                if(!jQuery.isEmptyObject(filter)){
+                    let path = window.location.pathname;
+                    let searchParam = new URLSearchParams(filter)
+                    searchParam = searchParam.toString()
+                    path = `${path}?${searchParam}`
+                    window.location.href = path
+                }
+            })
 
         $('#reset-data').click(function () {
             window.location.href = window.location.pathname

@@ -204,6 +204,11 @@ class OzonPageController extends BasePageController
             $filter['warehouse'] = $request->query('warehouse');
         }
 
+        if($request->query('search'))
+        {
+            $filter['search'] = $request->query('search');
+        }
+
         return $filter;
     }
 }
