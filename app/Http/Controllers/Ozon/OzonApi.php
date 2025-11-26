@@ -107,18 +107,19 @@ class OzonApi extends Controller
     {
         $url = 'https://api-seller.ozon.ru/v4/posting/fbs/ship';
         $jsonArr = [
-            [
-                'packages' => [
-                    [
-                        'products' => [
-                            [
-                                'product_id' => $productId,
-                                'quantity' => $quantity
-                            ]
+            'packages' => [
+                [
+                    'products' => [
+                        [
+                            'product_id' => (int)$productId,
+                            'quantity' => $quantity
                         ]
                     ]
-                ],
-                'posting_number' => $postingNumber
+                ]
+            ],
+            'posting_number' => $postingNumber,
+            'with' => [
+                'additional_data' => true
             ]
         ];
         return $this->getPostJsonRequest($url, $this->headers, json_encode($jsonArr));
