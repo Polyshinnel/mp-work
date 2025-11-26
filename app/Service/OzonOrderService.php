@@ -144,6 +144,9 @@ class OzonOrderService
             return ['error' => "Заказ {$postingId} не в статусе Принят"];
         }
         $ozonProducts = $this->ozonProductRepository->getOzonOrderProduct($orderId);
+        if($ozonProducts->isEmpty()) {
+            return ['error' => "Заказ {$postingId} не содержит товаров"];
+        }
         if($ozonProducts->count() > 1)
         {
             return ['error' => "Заказ {$postingId} содержит более одного товара"];
