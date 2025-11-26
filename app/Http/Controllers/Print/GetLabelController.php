@@ -72,10 +72,11 @@ class GetLabelController extends Controller
         }
 
         if($taskId) {
-            $resultLabel = $this->ozonApi->getLabels($taskId, $ozonIp);
-            $count = 10;
 
+            $count = 10;
             for ($i = 0; $i < $count; $i++) {
+                $resultLabel = $this->ozonApi->getLabels($taskId, $ozonIp);
+                
                 if ($resultLabel) {
                     $resultLabel = json_decode($resultLabel, true);
                     if (isset($resultLabel['result']['status'])) {
