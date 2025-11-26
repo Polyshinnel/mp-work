@@ -57,7 +57,8 @@ class OzonPageController extends BasePageController
                 'order_info' => $formattedOrder,
                 'tabList' => $tabList,
                 'filters' => $filters,
-                'selectedFilters' => $orderQueryFilters
+                'selectedFilters' => $orderQueryFilters,
+                'currentOzonStatus' => $orderStatus
             ]
         );
     }

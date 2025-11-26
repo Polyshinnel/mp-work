@@ -98,9 +98,13 @@
                                 </div>
                             </div>
 
-
-
                         </div>
+
+                        @if(isset($currentOzonStatus) && $currentOzonStatus == 1)
+                            <div style="margin: 15px 0; width: 100%; text-align: center;">
+                                <button type="button" class="btn btn-block btn-success" id="mark-as-sent" disabled>Я собрал!</button>
+                            </div>
+                        @endif
 
                         @php
                             $firstOrder = $order_info->first();
@@ -361,7 +365,24 @@
                     $(this).prop('checked', false)
                 })
             }
+            updateMarkAsSentButtonState();
         })
+
+        $('.order-checkbox').click(function () {
+            updateMarkAsSentButtonState();
+        })
+
+        function updateMarkAsSentButtonState() {
+            const checkedCount = $('.order-checkbox:checked').length;
+            const markAsSentBtn = $('#mark-as-sent');
+            if(markAsSentBtn.length) {
+                if(checkedCount > 0) {
+                    markAsSentBtn.prop('disabled', false);
+                } else {
+                    markAsSentBtn.prop('disabled', true);
+                }
+            }
+        }
 
         function downloadLabel()
         {
@@ -441,6 +462,59 @@
             });
         })
 
+        $('#mark-as-sent').on('click', function () {
+            let idArr = []
+            $('.order-checkbox:checked').each(function () {
+                idArr.push($(this).attr('data-item'))
+            })
+            if(idArr.length > 0) {
+                let path = '/ozon-list/mark-as-sent?';
+                for(let i = 0; i < idArr.length; i++)
+                {
+                    if(i == 0)
+                    {
+                        path += 'orders[]='+idArr[i]
+                    }else {
+                        path += '&orders[]='+idArr[i]
+                    }
+                }
+                
+                $.ajax({
+                    url: path,
+                    method: 'get',
+                    dataType: 'json',
+                    success: function(data){
+                        let messageText = 'Результаты отправки:\n\n';
+                        let hasErrors = false;
+                        
+                        if(Array.isArray(data)) {
+                            data.forEach(function(result) {
+                                if(result.error) {
+                                    messageText += '❌ ' + result.error + '\n';
+                                    hasErrors = true;
+                                } else if(result.message) {
+                                    messageText += '✅ ' + result.message + '\n';
+                                }
+                            });
+                        } else {
+                            messageText += 'Неизвестная ошибка';
+                            hasErrors = true;
+                        }
+                        
+                        alert(messageText);
+                        window.location.reload();
+                    },
+                    error: function(xhr, status, error) {
+                        alert('Ошибка при отправке заказов: ' + error);
+                    }
+                });
+            } else {
+                alert('Выберите хотя бы один заказ!')
+            }
+        })
+
+        // Инициализация состояния кнопки при загрузке страницы
+        updateMarkAsSentButtonState();
 
         })
     </script>

@@ -2,7 +2,9 @@
 
 namespace App\Service;
 
+use App\Http\Controllers\Ozon\OzonApi;
 use App\Http\Controllers\Utils\TimeController;
+use App\Repostory\Ozon\OzonProductRepository;
 use App\Repostory\Ozon\OzonRepository;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
@@ -10,10 +12,23 @@ class OzonOrderService
 {
     private OzonRepository $ozonRepository;
     private TimeController $timeController;
-    public function __construct(OzonRepository $ozonRepository, TimeController $timeController)
+    private OzonApi $ozonApi;
+    private OzonProductRepository $ozonProductRepository;
+    private OzonProcessingService $processingService;
+
+    public function __construct(
+        OzonRepository $ozonRepository,
+        TimeController $timeController,
+        OzonApi $ozonApi,
+        OzonProductRepository $ozonProductRepository,
+        OzonProcessingService $processingService
+    )
     {
         $this->ozonRepository = $ozonRepository;
         $this->timeController = $timeController;
+        $this->ozonApi = $ozonApi;
+        $this->ozonProductRepository = $ozonProductRepository;
+        $this->processingService = $processingService;
     }
 
     public function getOzonFilteredOrder(int $statusId, array $queryFilter, int $perPage = 20): LengthAwarePaginator
@@ -112,5 +127,57 @@ class OzonOrderService
             }
         }
         return $result;
+    }
+
+    public function markOzonOrderAsSent(int $orderId) {
+        $order = $this->ozonRepository->getFilteredOzonOrders(['id' => $orderId]);
+        if(!$order->isEmpty()) {
+            $order = $order->first();
+        } else {
+            return [
+                'error' => 'Order not found'
+            ];
+        }
+        $postingId = $order->ozon_posting_id;
+        $siteStatusId = $order->site_status_id;
+        if($siteStatusId != 3) {
+            return ['error' => "Заказ {$postingId} не в статусе Принят"];
+        }
+        $ozonProducts = $this->ozonProductRepository->getOzonOrderProduct($orderId);
+        if($ozonProducts->count() > 1)
+        {
+            return ['error' => "Заказ {$postingId} содержит более одного товара"];
+        }
+
+        $ozonProduct = $ozonProducts->first();
+        $quantity = $ozonProduct->quantity;
+        if($quantity > 1) {
+            return ['error' => "Заказ {$postingId} содержит более одного товара"];
+        }
+
+        $productInfo = $this->ozonProductRepository->getProductById($ozonProduct->product_id);
+
+
+        $count = 5;
+        for($i = 0; $i < $count; $i++) {
+            $sendingResult = $this->ozonApi->orderMarkAsShipped($postingId, $productInfo->product_id, 1);
+            $sendingResult = json_decode($sendingResult, true);
+            if(!isset($sendingResult['result']))
+            {
+                return ['error' => 'Не удалось отправить заказ'. $postingId];
+            }
+            $checkSendingResult = $this->ozonApi->getPostings($postingId);
+            $checkSendingResult = json_decode($checkSendingResult, true);
+            if(isset($checkSendingResult['result']['substatus']))
+            {
+
+                if($checkSendingResult['result']['substatus'] != 'ship_failed') {
+                    $ozonOrder = $checkSendingResult['result'];
+                    $this->processingService->updateOzonOrder([$ozonOrder]);
+                    return ['message' => 'Заказ '.$postingId.' отправлен'];
+                }
+            }
+        }
+        return ['error' => 'Не удалось отправить заказ'. $postingId];
     }
 }

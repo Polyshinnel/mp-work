@@ -6,6 +6,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Ozon\GetNewOzonOrder;
 use App\Http\Controllers\Ozon\GetOzonLabelPage;
 use App\Http\Controllers\Ozon\OzonLabelController;
+use App\Http\Controllers\Ozon\MarkAsSendOzonController;
 use App\Http\Controllers\Ozon\OzonPageController;
 use App\Http\Controllers\Ozon\TestController;
 use App\Http\Controllers\Ozon\UpdateOzonSiteStatusController;
@@ -108,6 +109,7 @@ Route::middleware([LoggedUser::class])->group(function () {
     Route::get('/ozon-list/update-data/{id}', [UpdateOzonSiteStatusController::class, 'update']);
     Route::get('/site/updateOrder', [UpdateOzonSiteStatusController::class, 'updateStatus']);
     Route::get('/ozon-list/synchronize', GetNewOzonOrder::class);
+    Route::get('/ozon-list/mark-as-sent', MarkAsSendOzonController::class);
 });
 
 Route::get('/print/get-labels/{seat_id}', PrintController::class);
