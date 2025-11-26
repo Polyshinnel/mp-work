@@ -4,6 +4,7 @@ namespace App\Service;
 
 use App\Http\Controllers\Ozon\OzonApi;
 use App\Http\Controllers\Utils\TimeController;
+use App\Models\OzonOrder;
 use App\Repostory\Ozon\OzonProductRepository;
 use App\Repostory\Ozon\OzonRepository;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
@@ -130,13 +131,9 @@ class OzonOrderService
     }
 
     public function markOzonOrderAsSent(int $orderId) {
-        $order = $this->ozonRepository->getFilteredOzonOrders(['id' => $orderId]);
-        if(!$order->isEmpty()) {
-            $order = $order->first();
-        } else {
-            return [
-                'error' => 'Order not found'
-            ];
+        $order = OzonOrder::find($orderId);
+        if(!$order) {
+            return ['error' => "Заказ {$orderId} не найден"];
         }
         $postingId = $order->ozon_posting_id;
         $siteStatusId = $order->site_status_id;
