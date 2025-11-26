@@ -58,7 +58,11 @@ class GetLabelController extends Controller
         $url = NULL;
         if($resultTask)
         {
-            $resultTask = json_decode($resultTask, true);
+            $resultTask = $this->normalizeApiResponse($resultTask);
+            if(!$resultTask)
+            {
+                return null;
+            }
             if(isset($resultTask['result']['tasks']))
             {
                 foreach ($resultTask['result']['tasks'] as $task)
@@ -76,9 +80,13 @@ class GetLabelController extends Controller
             $count = 10;
             for ($i = 0; $i < $count; $i++) {
                 $resultLabel = $this->ozonApi->getLabels($taskId, $ozonIp);
-                
+
                 if ($resultLabel) {
-                    $resultLabel = json_decode($resultLabel, true);
+                    $resultLabel = $this->normalizeApiResponse($resultLabel);
+                    if(!$resultLabel)
+                    {
+                        return null;
+                    }
                     if (isset($resultLabel['result']['status'])) {
                         if ($resultLabel['result']['status'] == 'completed') {
                             $url = $resultLabel['result']['file_url'];
@@ -118,7 +126,11 @@ class GetLabelController extends Controller
         $resultLabel = $this->ozonApi->getLabels($taskId);
         if($resultLabel)
         {
-            $resultLabel = json_decode($resultLabel, true);
+            $resultLabel = $this->normalizeApiResponse($resultLabel);
+            if(!$resultLabel)
+            {
+                return null;
+            }
             if(isset($resultLabel['result']['status']))
             {
                 if($resultLabel['result']['status'] == 'completed')
@@ -128,5 +140,30 @@ class GetLabelController extends Controller
             }
         }
         return NULL;
+    }
+
+    private function normalizeApiResponse($response): ?array
+    {
+        if(is_array($response))
+        {
+            Log::info('Ответ уже в формате массива');
+            Log::info($response);
+            return $response;
+        }
+
+        if(is_string($response))
+        {
+            $decoded = json_decode($response, true);
+            if(json_last_error() === JSON_ERROR_NONE)
+            {
+                return $decoded;
+            }
+
+            Log::error('Ошибка декодирования JSON: '.json_last_error_msg());
+            return null;
+        }
+
+        Log::error('Неожиданный тип ответа от API: '.gettype($response));
+        return null;
     }
 }
