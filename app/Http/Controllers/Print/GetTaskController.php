@@ -7,11 +7,11 @@ use App\Models\PrintJob;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
-class PrintController extends Controller
+class GetTaskController extends Controller
 {
-    public function __invoke(int $seatId)
+    public function __invoke(int $taskId)
     {
-        $data = PrintJob::where('seat_id', $seatId)->first();
+        $data = PrintJob::find($taskId);
         if($data)
         {
             $file = $data->file;
@@ -25,8 +25,6 @@ class PrintController extends Controller
 
             $fileContents = Storage::get($filePath);
             $base64Content = base64_encode($fileContents);
-            $data->delete();
-            //$data->update(['continue_print_job' => true]);
             return response()->json([
                 'task_id' => $data->id,
                 'filename' => basename($filePath),

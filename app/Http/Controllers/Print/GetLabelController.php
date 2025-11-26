@@ -8,6 +8,7 @@ use App\Http\Controllers\Yandex\YandexApi;
 use App\Http\Requests\CreateLabelRequest;
 use App\Models\PrintJob;
 use Illuminate\Http\Request;
+use Log;
 use Storage;
 
 class GetLabelController extends Controller
@@ -55,7 +56,6 @@ class GetLabelController extends Controller
         $resultTask = $this->ozonApi->getLabelsTask($postingArr, $ozonIp);
         $taskId = NULL;
         $url = NULL;
-
         if($resultTask)
         {
             $resultTask = json_decode($resultTask, true);
@@ -71,31 +71,31 @@ class GetLabelController extends Controller
             }
         }
 
-
         if($taskId) {
             $resultLabel = $this->ozonApi->getLabels($taskId, $ozonIp);
-            if ($resultLabel) {
-                $resultLabel = json_decode($resultLabel, true);
-                if (isset($resultLabel['result']['status'])) {
-                    if ($resultLabel['result']['status'] == 'completed') {
-                        $url = $resultLabel['result']['file_url'];
+            $count = 10;
+
+            for ($i = 0; $i < $count; $i++) {
+                if ($resultLabel) {
+                    $resultLabel = json_decode($resultLabel, true);
+                    if (isset($resultLabel['result']['status'])) {
+                        if ($resultLabel['result']['status'] == 'completed') {
+                            $url = $resultLabel['result']['file_url'];
+                        }
                     }
                 }
-            }
 
-            $url = NULL;
-            $count = 20;
-            while ($count > 0)
-            {
-                $url = $this->checkLabelsTask($taskId);
-                if($url)
-                {
+                if($url){
                     break;
                 }
-                $count--;
+                sleep(1);
+            }
+
+            if(!$url)
+            {
+                Log::error("Не удалось получить файл с сервера Ozon для заказа $postingId");
             }
         }
-
 
         if($url)
         {

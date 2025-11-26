@@ -11,7 +11,9 @@ use App\Http\Controllers\Ozon\TestController;
 use App\Http\Controllers\Ozon\UpdateOzonSiteStatusController;
 use App\Http\Controllers\Payment\GetPayments;
 use App\Http\Controllers\Payment\PaymentController;
+use App\Http\Controllers\Print\ConfirmWorkController;
 use App\Http\Controllers\Print\GetLabelController;
+use App\Http\Controllers\Print\GetTaskController;
 use App\Http\Controllers\Print\PrintController;
 use App\Http\Controllers\Print\PrintJobController;
 use App\Http\Controllers\Returning\GetReturning;
@@ -111,3 +113,5 @@ Route::middleware([LoggedUser::class])->group(function () {
 Route::get('/print/get-labels/{seat_id}', PrintController::class);
 Route::post('/print/add-jobs', PrintJobController::class);
 Route::post('/print/add-label', GetLabelController::class);
+Route::get('/print/confirm-task/{taskId}', ConfirmWorkController::class);
+Route::get('/print/get-task/{taskId}', GetTaskController::class);
