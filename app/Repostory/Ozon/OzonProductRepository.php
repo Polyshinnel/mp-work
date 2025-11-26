@@ -30,6 +30,6 @@ class OzonProductRepository
 
     public function getOzonOrderProduct(int $orderId): ?Collection
     {
-        return OzonOrderProducts::where('order_id', $orderId)->get();
+        return OzonOrderProducts::where('ozon_order_id', $orderId)->get();
     }
 }
