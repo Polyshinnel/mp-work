@@ -163,11 +163,11 @@ class OzonOrderService
 
         $count = 5;
         for($i = 0; $i < $count; $i++) {
-            $sendingResult = $this->ozonApi->orderMarkAsShipped($postingId, $productInfo->product_id, 1);
-            $sendingResult = json_decode($sendingResult, true);
+            $sendingResultStr = $this->ozonApi->orderMarkAsShipped($postingId, $productInfo->product_id, 1);
+            $sendingResult = json_decode($sendingResultStr, true);
             if(!isset($sendingResult['result']))
             {
-                return ['error' => 'Не удалось отправить заказ'. $postingId];
+                return ['error' => 'Не удалось отправить заказ '. $postingId. ' Причина: '. $sendingResult['message']];
             }
             $checkSendingResult = $this->ozonApi->getPostings($postingId);
             $checkSendingResult = json_decode($checkSendingResult, true);

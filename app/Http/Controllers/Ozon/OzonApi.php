@@ -111,8 +111,10 @@ class OzonApi extends Controller
                 'packages' => [
                     [
                         'products' => [
-                            'product_id' => $productId,
-                            'quantity' => $quantity
+                            [
+                                'product_id' => $productId,
+                                'quantity' => $quantity
+                            ]
                         ]
                     ]
                 ],
