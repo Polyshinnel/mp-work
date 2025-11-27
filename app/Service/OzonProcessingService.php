@@ -188,6 +188,7 @@ class OzonProcessingService
                                         'offer_id' => $product['offer_id'],
                                         'quantity' => $product['quantity'],
                                         'name' => $product['name'],
+                                        'sku' => $product['sku'],
                                     ];
                                 }
                             }

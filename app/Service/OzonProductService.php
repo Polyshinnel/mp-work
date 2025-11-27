@@ -29,6 +29,7 @@ class OzonProductService
                 'offer_id' => $productArr['offer_id'],
                 'name' => $productArr['name'],
                 'product_id' => $ozonProductId,
+                'ozon_sku' => $productArr['sku'],
             ];
             return $this->ozonProductRepository->createProduct($createArr);
         }

@@ -163,7 +163,7 @@ class OzonOrderService
 
         $count = 5;
         for($i = 0; $i < $count; $i++) {
-            $sendingResultStr = $this->ozonApi->orderMarkAsShipped($postingId, $productInfo->product_id, 1);
+            $sendingResultStr = $this->ozonApi->orderMarkAsShipped($postingId, $productInfo->ozon_sku, 1);
             $sendingResult = json_decode($sendingResultStr, true);
             if(!isset($sendingResult['result']))
             {
