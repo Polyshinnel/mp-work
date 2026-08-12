@@ -12,7 +12,7 @@ class SimplaOrderController extends Controller
     public function getOrder(string $externalId): ?array
     {
         try{
-            $url = 'https://paolareinas.ru/index.php?module=OrderApiView';
+            $url = 'https://y-volution.ru/index.php?module=OrderApiView&key=aZBcNu0V8mXA';
             $data = [
                 'external_id' => $externalId,
                 'api_method' => 'search_order'
@@ -38,7 +38,7 @@ class SimplaOrderController extends Controller
     public function getInternalOrderList(array $orderList)
     {
         try{
-            $url = 'https://paolareinas.ru/index.php?module=OrderApiView';
+            $url = 'https://y-volution.ru/index.php?module=OrderApiView&key=aZBcNu0V8mXA';
             $data = [
                 'order_list' => $orderList,
                 'api_method' => 'search_internal_order_list'
@@ -64,7 +64,7 @@ class SimplaOrderController extends Controller
     public function getInternalOrder(string $internalOrderId, string $database)
     {
         try{
-            $url = 'https://paolareinas.ru/index.php?module=OrderApiView';
+            $url = 'https://y-volution.ru/index.php?module=OrderApiView&key=aZBcNu0V8mXA';
             $data = [
                 'internal_id' => $internalOrderId,
                 'database' => $database,
@@ -91,7 +91,7 @@ class SimplaOrderController extends Controller
     public function updateOrderStatus(string $internalOrderId, string $database, string $status)
     {
         try{
-            $url = 'https://paolareinas.ru/index.php?module=OrderApiView';
+            $url = 'https://y-volution.ru/index.php?module=OrderApiView&key=aZBcNu0V8mXA';
             $data = [
                 'internal_id' => $internalOrderId,
                 'database' => $database,
