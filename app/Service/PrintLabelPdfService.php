@@ -9,7 +9,7 @@ class PrintLabelPdfService
 
     public function generate(string $type, string $data, ?string $sign, int $quantity): string
     {
-        $pdf = new \TCPDF('P', 'mm', [self::PAGE_WIDTH_MM, self::PAGE_HEIGHT_MM], true, 'UTF-8', false);
+        $pdf = new \TCPDF('L', 'mm', [self::PAGE_WIDTH_MM, self::PAGE_HEIGHT_MM], true, 'UTF-8', false);
         $pdf->SetCreator(config('app.name'));
         $pdf->SetAuthor(config('app.name'));
         $pdf->SetTitle('Generated print label');
@@ -31,14 +31,20 @@ class PrintLabelPdfService
         if ($type === 'qr-code') {
             $size = 30;
             $x = (self::PAGE_WIDTH_MM - $size) / 2;
-            $y = 4;
+            $signHeight = 12;
+            $gap = $sign === '' ? 0 : 2;
+            $groupHeight = $size + $gap + ($sign === '' ? 0 : $signHeight);
+            $y = (self::PAGE_HEIGHT_MM - $groupHeight) / 2;
             $pdf->write2DBarcode($data, 'QRCODE,M', $x, $y, $size, $size, ['border' => false], 'N');
-            $signY = 36;
+            $signY = $y + $size + $gap;
         } else {
             $width = 64;
             $height = 17;
             $x = (self::PAGE_WIDTH_MM - $width) / 2;
-            $y = 10;
+            $signHeight = 12;
+            $gap = $sign === '' ? 0 : 2;
+            $groupHeight = $height + $gap + ($sign === '' ? 0 : $signHeight);
+            $y = (self::PAGE_HEIGHT_MM - $groupHeight) / 2;
             $style = [
                 'position' => 'C',
                 'align' => 'C',
@@ -51,13 +57,13 @@ class PrintLabelPdfService
                 'text' => false,
             ];
             $pdf->write1DBarcode($data, 'C128', $x, $y, $width, $height, 0.4, $style, 'N');
-            $signY = 30;
+            $signY = $y + $height + $gap;
         }
 
         if ($sign !== '') {
             $pdf->SetFont('freesans', '', 9);
             $pdf->SetXY(3, $signY);
-            $pdf->MultiCell(self::PAGE_WIDTH_MM - 6, 12, $sign, 0, 'C', false, 1, '', '', true, 0, false, true, 12, 'M');
+            $pdf->MultiCell(self::PAGE_WIDTH_MM - 6, $signHeight, $sign, 0, 'C', false, 1, '', '', true, 0, false, true, $signHeight, 'M');
         }
     }
 }
