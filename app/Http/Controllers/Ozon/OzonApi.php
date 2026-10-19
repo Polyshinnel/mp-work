@@ -3,7 +3,8 @@
 namespace App\Http\Controllers\Ozon;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
+use UnexpectedValueException;
 
 class OzonApi extends Controller
 {
@@ -20,22 +21,50 @@ class OzonApi extends Controller
             $apiKey
         ];
     }
-    public function getFilteredPostings($dateStart, $dateEnd, $warehouses, $status)
+    public function getFilteredPostings(string $dateStart, string $dateEnd, array $warehouses, string $status): array
     {
-        $url = 'https://api-seller.ozon.ru/v3/posting/fbs/list';
+        $url = 'https://api-seller.ozon.ru/v4/posting/fbs/list';
         $jsonArr = [
-            'dir' => 'DESC',
+            'sort_dir' => 'DESC',
             'filter' => [
                 'since' => $dateStart,
-                'status' => $status,
+                'statuses' => [$status],
                 'to' => $dateEnd,
-                'warehouse_id' => $warehouses
+                'warehouse_ids' => array_values(array_map('strval', $warehouses)),
             ],
-            'limit' => 500,
-            'offset' => 0,
+            'limit' => 100,
+            'cursor' => '',
         ];
 
-        return $this->getPostJsonRequest($url, $this->headers, json_encode($jsonArr));
+        $postings = [];
+        $seenCursors = [];
+
+        do {
+            $result = Http::withHeaders([
+                'Client-Id' => config('ozon.ozon_client_id'),
+                'Api-Key' => config('ozon.ozon_api_key'),
+            ])->acceptJson()->connectTimeout(10)->timeout(60)
+                ->post($url, $jsonArr)->throw()->json();
+
+            if (!is_array($result) || !isset($result['postings']) || !is_array($result['postings'])
+                || !isset($result['has_next']) || !is_bool($result['has_next'])) {
+                throw new UnexpectedValueException('Ozon FBS v4 returned an invalid posting list.');
+            }
+
+            $postings = array_merge($postings, $result['postings']);
+
+            if ($result['has_next']) {
+                $cursor = $result['cursor'] ?? null;
+                if (!is_string($cursor) || $cursor === '' || isset($seenCursors[$cursor])) {
+                    throw new UnexpectedValueException('Ozon FBS v4 returned an invalid pagination cursor.');
+                }
+
+                $seenCursors[$cursor] = true;
+                $jsonArr['cursor'] = $cursor;
+            }
+        } while ($result['has_next']);
+
+        return $postings;
     }
 
     public function getWarehouseList()

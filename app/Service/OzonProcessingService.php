@@ -149,17 +149,11 @@ class OzonProcessingService
         if($warehouses && $statuses){
             foreach($warehouses as $warehouse){
                 foreach($statuses as $status){
-                    $result = $api->getFilteredPostings($dateStart, $dateEnd, [$warehouse], $status);
-                    if($result){
-                        $result = json_decode($result, true);
-
-                        if($result['result']['postings']) {
-                            foreach($result['result']['postings'] as $posting){
-                                $checkOzonPostingInfo = $this->getOzonOrderByPosting($posting['posting_number']);
-                                if(!$checkOzonPostingInfo){
-                                    $rawResults[$warehouse][$status][] = $posting;
-                                }
-                            }
+                    $postings = $api->getFilteredPostings($dateStart, $dateEnd, [$warehouse], $status);
+                    foreach ($postings as $posting) {
+                        $checkOzonPostingInfo = $this->getOzonOrderByPosting($posting['posting_number']);
+                        if (!$checkOzonPostingInfo) {
+                            $rawResults[$warehouse][$status][] = $posting;
                         }
                     }
                 }

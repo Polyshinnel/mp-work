@@ -49,27 +49,12 @@ class UpdateOzonOrders
         //$dateStart = '2024-11-30T00:00:00.000Z';
         $dateEnd = sprintf('%sT%s.000Z', $today, '23:59:59');
         foreach ($statusList as $status) {
-            $result = $this->api->getFilteredPostings($dateStart, $dateEnd, $warehouses, $status);
-            if($result)
-            {
-                $result = json_decode($result, true);
-                if(isset($result['result']['postings'])) {
-                    $postings = $result['result']['postings'];
-                    foreach($postings as $posting) {
-                        $formattedPostings[] = [
-                            'posting_number' => $posting['posting_number'],
-                            'status' => $posting['status'],
-                        ];
-
-//                        if($posting['posting_number'] == '21022408-1213-1')
-//                        {
-//                            dd([
-//                                'posting_number' => $posting['posting_number'],
-//                                'status' => $posting['status'],
-//                            ]);
-//                        }
-                    }
-                }
+            $postings = $this->api->getFilteredPostings($dateStart, $dateEnd, $warehouses, $status);
+            foreach ($postings as $posting) {
+                $formattedPostings[] = [
+                    'posting_number' => $posting['posting_number'],
+                    'status' => $posting['status'],
+                ];
             }
         }
 
