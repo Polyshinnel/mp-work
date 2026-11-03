@@ -83,38 +83,33 @@ class OzonApi extends Controller
 
     public function getLabelsTask(array $postings, bool $ozonIp = false): bool|string
     {
-        if($ozonIp)
-        {
-            $clientId = sprintf('Client-Id: %s', config('ozon.ozon_ip_client_id'));
-            $apiKey = sprintf('Api-Key: %s', config('ozon.ozon_ip_api_key'));
-
-            $this->headers = [
-                'Content-Type: application/json',
-                $clientId,
-                $apiKey
-            ];
-        }
-        $postingsArr = ['posting_number' => $postings];
-        $url = 'https://api-seller.ozon.ru/v2/posting/fbs/package-label/create';
-        return $this->getPostJsonRequest($url, $this->headers, json_encode($postingsArr));
+        return $this->labelRequest('/v3/posting/fbs/package-label/create', [
+            'posting_numbers' => array_values($postings),
+        ], $ozonIp);
     }
 
     public function getLabels(string $taskId, bool $ozonIp = false): bool|string
     {
-        if($ozonIp)
-        {
-            $clientId = sprintf('Client-Id: %s', config('ozon.ozon_ip_client_id'));
-            $apiKey = sprintf('Api-Key: %s', config('ozon.ozon_ip_api_key'));
+        return $this->labelRequest('/v2/posting/fbs/package-label/get', [
+            'task_id' => (int) $taskId,
+        ], $ozonIp);
+    }
 
-            $this->headers = [
-                'Content-Type: application/json',
-                $clientId,
-                $apiKey
-            ];
+    private function labelRequest(string $path, array $payload, bool $ozonIp): string
+    {
+        $prefix = $ozonIp ? 'ozon.ozon_ip_' : 'ozon.ozon_';
+        $response = Http::withHeaders([
+            'Client-Id' => config($prefix.'client_id'),
+            'Api-Key' => config($prefix.'api_key'),
+        ])->acceptJson()->connectTimeout(10)->timeout(30)
+            ->post('https://api-seller.ozon.ru'.$path, $payload)->throw()->json();
+
+        if (!is_array($response)) {
+            throw new UnexpectedValueException('Ozon returned an invalid label response.');
         }
-        $postingsArr = ['task_id' => $taskId];
-        $url = 'https://api-seller.ozon.ru/v1/posting/fbs/package-label/get';
-        return $this->getPostJsonRequest($url, $this->headers, json_encode($postingsArr));
+
+        // Keep the envelope expected by both existing print controllers.
+        return json_encode(isset($response['result']) ? $response : ['result' => $response], JSON_THROW_ON_ERROR);
     }
 
     public function getFilteredProducts($offerId)
