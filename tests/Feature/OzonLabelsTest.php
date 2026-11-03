@@ -3,12 +3,29 @@
 namespace Tests\Feature;
 
 use App\Http\Controllers\Ozon\OzonApi;
+use App\Http\Controllers\Ozon\GetOzonLabelPage;
+use App\Http\Controllers\Print\GetLabelController;
 use Illuminate\Http\Client\RequestException;
 use Illuminate\Support\Facades\Http;
 use Tests\TestCase;
 
 class OzonLabelsTest extends TestCase
 {
+    public function test_label_controllers_recognize_completed_status_objects_and_legacy_strings(): void
+    {
+        $api = $this->mock(OzonApi::class);
+        foreach ([GetOzonLabelPage::class, GetLabelController::class] as $controllerClass) {
+            foreach (['completed', ['code' => 'completed'], ['code' => 'pending'], []] as $status) {
+                $api->shouldReceive('getLabels')->once()->with('123')->andReturn(json_encode([
+                    'result' => ['status' => $status, 'file_url' => 'https://example.test/labels.pdf'],
+                ]));
+                $expected = $status === 'completed' || $status === ['code' => 'completed']
+                    ? 'https://example.test/labels.pdf' : null;
+                $this->assertSame($expected, app($controllerClass)->checkLabelsTask('123'));
+            }
+        }
+    }
+
     public function test_new_label_contract_and_credentials_for_both_accounts(): void
     {
         Http::preventStrayRequests();

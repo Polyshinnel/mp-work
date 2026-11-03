@@ -88,7 +88,8 @@ class GetLabelController extends Controller
                         return null;
                     }
                     if (isset($resultLabel['result']['status'])) {
-                        if ($resultLabel['result']['status'] == 'completed') {
+                        $status = $resultLabel['result']['status'];
+                        if ((is_array($status) ? ($status['code'] ?? null) : $status) === 'completed') {
                             $url = $resultLabel['result']['file_url'];
                         }
                     }
@@ -133,7 +134,8 @@ class GetLabelController extends Controller
             }
             if(isset($resultLabel['result']['status']))
             {
-                if($resultLabel['result']['status'] == 'completed')
+                $status = $resultLabel['result']['status'];
+                if ((is_array($status) ? ($status['code'] ?? null) : $status) === 'completed')
                 {
                     return $resultLabel['result']['file_url'];
                 }

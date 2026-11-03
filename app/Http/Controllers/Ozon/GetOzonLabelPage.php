@@ -80,7 +80,8 @@ class GetOzonLabelPage extends Controller
             $resultLabel = json_decode($resultLabel, true);
             if(isset($resultLabel['result']['status']))
             {
-                if($resultLabel['result']['status'] == 'completed')
+                $status = $resultLabel['result']['status'];
+                if ((is_array($status) ? ($status['code'] ?? null) : $status) === 'completed')
                 {
                    return $resultLabel['result']['file_url'];
                 }
